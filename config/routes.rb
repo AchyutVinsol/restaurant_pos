@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+  root 'pages#show', as: 'home', via: :all, page: "home"
+
+  get "verify/:token", to: "users#verification", as: :account_verification
+  get "/pages/:page" => "pages#show"
+  get "/home" => "pages#show"
+
+  controller :sessions do
+    get  'login' => :new
+    post 'login' => :create
+    delete 'logout' => :destroy
+  end
+
+  resources :users
+
+  # get "sessions/destroy"
+  # get "sessions/create"
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

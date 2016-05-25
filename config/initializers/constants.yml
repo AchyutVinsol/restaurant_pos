@@ -1,0 +1,8 @@
+development:
+  default_email: 'Restaurant Admin <restaurant@admin.com>'
+
+production:
+  default_email: 'Restaurant Owner <restaurant@admin.com>'
+
+test:
+  default_email: 'Restaurant Tester <restaurant@admin.com>'
