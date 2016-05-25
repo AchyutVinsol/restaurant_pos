@@ -4,6 +4,8 @@ class SessionsController < ApplicationController
   # before_action :set_cart
   # skip_before_action :authorize
 
+  #FIXME_AB: if user is logged in the he should not be able to new and create
+
   def new
   end
 

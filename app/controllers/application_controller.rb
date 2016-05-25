@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
 
     def ensure_anonymous
       if signed_in?
-        redirect_to(home_url, notice: 'Logout to create new user!!')
+        redirect_to(home_url, notice: 'You are already logged in!')
       end
     end
 

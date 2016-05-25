@@ -1,4 +1,4 @@
 <h3>Hello <%= @user.first_name %>!, welcome to the Restaurant POS!</h3>
 <h4>Here is the link to verify your email Id!</h4>
 <h4>It will also automatically log you in!</h4>
-<%= link_to('Click here to verify your email!', account_verification_path(@user.verification_token) %>
+<%= link_to('Click here to verify your email!', account_verification_url(@user.verification_token)) %>

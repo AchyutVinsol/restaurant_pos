@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :ensure_anonymous, only: [:create]
+  before_action :ensure_anonymous, only: [:new, :create]
 
   # GET /users/new
   def new
@@ -17,21 +17,13 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1
-  # DELETE /users/1.json
-  def destroy
-    @user.destroy
-    redirect_to users_url, notice: 'User was successfully destroyed.'
-    head :no_content
-  end
-
   def verification
     @user = User.find_by(verification_token: params[:token])
     if @user.nil?
       flash[:notice] = "Invalid authentication token!!"
     elsif @user.verification_token_valid?
-      sign_in(@user)
       @user.verify_email!
+      sign_in(@user)
       flash[:notice] = "Dear #{ @user.first_name }, your email id #{ @user.email } has been verified!"
     else
       flash[:notice] = "Dear #{ @user.first_name }, the verfication failed for id #{ @user.email } since the verfication token expired!"

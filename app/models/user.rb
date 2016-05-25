@@ -16,10 +16,10 @@ class User < ActiveRecord::Base
   after_commit :send_verification_email, on: :create
 
   def verify_email!
-    verified_at = Time.current
-    verification_token = nil
-    verification_token_expiry_at = nil
-    save
+    self.verified_at = Time.current
+    self.verification_token = nil
+    self.verification_token_expiry_at = nil
+    save!
   end
 
   def verified?
