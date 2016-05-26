@@ -1,19 +1,26 @@
 class User < ActiveRecord::Base
   has_secure_password
 
+  attr_accessor :password_required
+  scope :verified, ->{ where.not(verified_at: nil) }
+
   validates :first_name, :last_name, presence: true
-  validates_uniqueness_of :email, case_sensitive: false
-  validates :email, format: {
+  validates :email, uniqueness: {case_sensitive: false}, presence: true, format: {
     with:    REGEXP[:email],
     message: 'should have proper format.'
   }
+  validates :password, length: { minimum: 6 }, if: 'password_required.present?'
+
 
   # after_destroy :ensure_an_admin_remains
   # before_destroy :check_if_can_destroy
   # before_update :check_if_can_update
-  # before_create :generate_token
+  before_validation :set_password_required, on: :create
   before_create :genrate_email_verification_token
   after_commit :send_verification_email, on: :create
+
+  skip_callback :create, :before, :genrate_email_verification_token, if: -> { self.admin == true }
+  skip_callback :commit, :after, :send_verification_email, if: -> { self.admin == true }
 
   def verify_email!
     self.verified_at = Time.current
@@ -30,11 +37,51 @@ class User < ActiveRecord::Base
     verification_token_expiry_at > Time.current
   end
 
+  def forgot_password_token_valid?
+    debugger
+    forgot_password_token_expiry_at > Time.current
+  end
+
+  def fullfill_forgot_password_token!
+    debugger
+    self.forgot_password_token = generate_token('forgot_password_token')
+    self.forgot_password_token_expiry_at = CONSTANTS['token_validity_period'].hours.from_now
+    save!
+    UserNotifier.forgot_password_email(self).deliver_now
+  end
+
+  def genrate_remember_me_token!
+    self.remember_me_token = generate_token('remember_me_token')
+    save!
+  end
+
+  def reset_password!(new_password, new_password_confirmation)
+    self.password = new_password
+    self.password_confirmation = new_password_confirmation
+    self.forgot_password_token = nil
+    self.forgot_password_token_expiry_at = nil
+    save!
+  end
+
+  def clear_remember_me_token!(cookies)
+    remember_me_token = nil
+    cookies.delete :remember_me_token
+    save!
+  end
+
+  def admin?
+    return false if (admin == 0)
+  end
+
   private
+
+    def set_password_required
+      password_required = 1;
+    end
 
     def genrate_email_verification_token
       self.verification_token = generate_token('verification_token')
-      self.verification_token_expiry_at = Time.current + 6.hours
+      self.verification_token_expiry_at = CONSTANTS['token_validity_period'].hours.from_now
     end
 
     def generate_token(token_type)
@@ -46,7 +93,7 @@ class User < ActiveRecord::Base
     end
 
     def send_verification_email
-      UserNotifier.verification_email(self).deliver
+      UserNotifier.verification_email(self).deliver_now
     end
 
     # def check_if_can_destroy

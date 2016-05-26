@@ -1,5 +1,5 @@
 <%= form_for(@user, html: {class: 'form-horizontal'}) do |f| %>
-  <%= render partial: 'shared/errors', object: @user %>
+  <%= render partial: 'shared/errors', locals: { object: @user } %>
   <fieldset>
     <legend>Enter User Details</legend>
     <div class="form-group">
@@ -18,7 +18,7 @@
       <%= f.label :email, "Email:", class: "col-md-2 control-label" %>
       <div 
       class="col-md-8">
-        <%= f.text_field :email, class: "form-control" %>
+        <%= f.email_field :email, class: "form-control" %>
       </div>
     </div>
     <div class="form-group">

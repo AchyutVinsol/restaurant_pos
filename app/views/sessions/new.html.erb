@@ -1,4 +1,3 @@
-<%= render partial: 'shared/flash' %>
 <%= form_tag(login_path, method: :post, class: 'form-horizontal') do %>
   <fieldset>
     <legend>Please Log In</legend>
@@ -8,7 +7,6 @@
         <%= text_field_tag :email, params[:email], class: "form-control" %>
       </div>
     </div>
-    <br>
     <div class="form-group">
       <%= label_tag :password, "Password:", class: "col-md-2 control-label" %>
       <div class="col-md-8">
@@ -16,7 +14,14 @@
       </div>
     </div>
     <div class="form-group">
+      <%= label_tag :remember_me, "Remember Me:", class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= check_box_tag :remember_me, params[:remember_me], class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
       <div class="col-md-8 col-md-offset-2">
+        <%= link_to('Forgot Password', new_password_request_path, class: "btn btn-primary") %>
         <%= submit_tag "Login", class: "btn btn-default btn-primary" %>
       </div>
     </div>

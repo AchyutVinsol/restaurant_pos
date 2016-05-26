@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
+
   root 'pages#show', as: 'home', via: :all, page: "home"
+
+  resources :password_requests, only: [:create, :new]
+  resources :password_resets, only: [:create, :new]
 
   get "verify/:token", to: "users#verification", as: :account_verification
   get "/pages/:page" => "pages#show"
@@ -11,7 +15,8 @@ Rails.application.routes.draw do
     delete 'logout' => :destroy
   end
 
-  resources :users
+  resources :users, only: [:create, :new]
+
 
   # get "sessions/destroy"
   # get "sessions/create"
