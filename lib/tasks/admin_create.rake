@@ -13,6 +13,7 @@ namespace :admin do
     STDOUT.puts "Re-enter password."
     @user.password_confirmation = STDIN.gets.chomp
     @user.admin = true
+    @user.verified_at = Time.current
     @user.save!
   end
 end
