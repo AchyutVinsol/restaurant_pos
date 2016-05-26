@@ -38,12 +38,10 @@ class User < ActiveRecord::Base
   end
 
   def forgot_password_token_valid?
-    debugger
     forgot_password_token_expiry_at > Time.current
   end
 
   def fullfill_forgot_password_token!
-    debugger
     self.forgot_password_token = generate_token('forgot_password_token')
     self.forgot_password_token_expiry_at = CONSTANTS['token_validity_period'].hours.from_now
     save!
@@ -58,13 +56,14 @@ class User < ActiveRecord::Base
   def reset_password!(new_password, new_password_confirmation)
     self.password = new_password
     self.password_confirmation = new_password_confirmation
+    set_password_required
     self.forgot_password_token = nil
     self.forgot_password_token_expiry_at = nil
     save!
   end
 
   def clear_remember_me_token!(cookies)
-    remember_me_token = nil
+    self.remember_me_token = nil
     cookies.delete :remember_me_token
     save!
   end
@@ -76,7 +75,7 @@ class User < ActiveRecord::Base
   private
 
     def set_password_required
-      password_required = 1;
+      self.password_required = true;
     end
 
     def genrate_email_verification_token

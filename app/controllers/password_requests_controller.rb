@@ -7,7 +7,6 @@ class PasswordRequestsController < ApplicationController
   def create
     user = User.verified.find_by(email: params[:email])
     if user
-      debugger
       user.fullfill_forgot_password_token!
       redirect_to home_url, notice: "Hi #{ user.first_name }, you have been sent a password reset mail!"
     else
