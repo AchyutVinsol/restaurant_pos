@@ -30,11 +30,29 @@ class User < ActiveRecord::Base
     verification_token_expiry_at > Time.current
   end
 
+  def forgot_password_token_valid?
+    forgot_password_token_expiry_at > Time.current
+  end
+
+  def genrate_forgot_password_token
+    self.forgot_password_token = generate_token('forgot_password_token')
+    self.forgot_password_token_expiry_at = Time.current + TOKEN_VALIDITY_PERIOD
+    save!
+  end
+
+  def reset_password(new_password, new_password_confirmation)
+    self.password = new_password
+    self.password_confirmation = new_password_confirmation
+    self.forgot_password_token = nil
+    self.forgot_password_token_expiry_at = nil
+    save!
+  end
+
   private
 
     def genrate_email_verification_token
       self.verification_token = generate_token('verification_token')
-      self.verification_token_expiry_at = Time.current + 6.hours
+      self.verification_token_expiry_at = Time.current + TOKEN_VALIDITY_PERIOD
     end
 
     def generate_token(token_type)
@@ -46,7 +64,7 @@ class User < ActiveRecord::Base
     end
 
     def send_verification_email
-      UserNotifier.verification_email(self).deliver
+      UserNotifier.verification_email(self).deliver_now
     end
 
     # def check_if_can_destroy

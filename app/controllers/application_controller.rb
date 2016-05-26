@@ -24,4 +24,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def signed_out?
+      !current_user
+    end
+
 end

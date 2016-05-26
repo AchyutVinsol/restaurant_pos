@@ -1,10 +1,9 @@
 class SessionsController < ApplicationController
+  before_action :ensure_no_session, only: [:new, :create]
 
   # include CurrentCart
   # before_action :set_cart
   # skip_before_action :authorize
-
-  #FIXME_AB: if user is logged in the he should not be able to new and create
 
   def new
   end
@@ -29,4 +28,13 @@ class SessionsController < ApplicationController
     reset_session
     redirect_to home_url, notice: "You have been logged out successfully"
   end
+
+  private
+
+    def ensure_no_session
+      if signed_in?
+        redirect_to login_url, alert: "#{ current_user.first_name } is already loggedin!!"
+      end
+    end
+
 end
