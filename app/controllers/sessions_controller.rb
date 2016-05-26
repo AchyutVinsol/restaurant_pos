@@ -9,9 +9,15 @@ class SessionsController < ApplicationController
   end
 
   def create
+    # debugger
     user = User.find_by(email: params[:email])
     if user && (user.verified? && user.authenticate(params[:password]))
       sign_in(user)
+      if params[:remember_me] == 'on'
+        # debugger
+        user.genrate_remember_me_token
+        cookies.permanent[:remember_me_token] = user.remember_me_token
+      end
       # set_last_session_activity
       # if user.role == 'admin'
       #   redirect_to admin_reports_url
@@ -25,6 +31,10 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    #FIXME_AB: put in a diffrent method??
+    current_user.remember_me_token = nil
+    cookies.delete :remember_me_token
+
     reset_session
     redirect_to home_url, notice: "You have been logged out successfully"
   end

@@ -40,6 +40,12 @@ class User < ActiveRecord::Base
     save!
   end
 
+  def genrate_remember_me_token
+    self.remember_me_token = generate_token('remember_me_token')
+    # self.remember_me_token_expiry_at = Time.current + TOKEN_VALIDITY_PERIOD
+    save!
+  end
+
   def reset_password(new_password, new_password_confirmation)
     self.password = new_password
     self.password_confirmation = new_password_confirmation

@@ -7,7 +7,12 @@ class ApplicationController < ActionController::Base
   protected
 
     def current_user
-      @current_user ||= User.find(session[:user_id]) if session[:user_id]
+      debugger
+      if session[:user_id]
+        @current_user ||= User.find(session[:user_id])
+      elsif cookies[:remember_me_token]
+        @current_user ||= User.find_by(remember_me_token: cookies[:remember_me_token])
+      end
     end
 
     def signed_in?
