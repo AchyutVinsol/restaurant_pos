@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   attr_accessor :password_required
+
   scope :verified, ->{ where.not(verified_at: nil) }
 
   validates :first_name, :last_name, presence: true
@@ -19,8 +20,10 @@ class User < ActiveRecord::Base
   before_create :genrate_email_verification_token
   after_commit :send_verification_email, on: :create
 
-  skip_callback :create, :before, :genrate_email_verification_token, if: -> { self.admin == true }
-  skip_callback :commit, :after, :send_verification_email, if: -> { self.admin == true }
+  # skip_callback :create, :before, :genrate_email_verification_token, if: -> { self.admin == true }
+  # skip_callback :commit, :after, :send_verification_email, if: -> { self.admin == true }
+  skip_callback :create, :before, :genrate_email_verification_token, if: 'admin?'
+  skip_callback :commit, :after, :send_verification_email, if: 'admin?'
 
   def verify_email!
     self.verified_at = Time.current
@@ -42,14 +45,14 @@ class User < ActiveRecord::Base
   end
 
   def fullfill_forgot_password_token!
-    self.forgot_password_token = generate_token('forgot_password_token')
+    self.forgot_password_token = generate_token(:forgot_password_token)
     self.forgot_password_token_expiry_at = CONSTANTS['token_validity_period'].hours.from_now
     save!
     UserNotifier.forgot_password_email(self).deliver_now
   end
 
   def genrate_remember_me_token!
-    self.remember_me_token = generate_token('remember_me_token')
+    self.remember_me_token = generate_token(:remember_me_token)
     save!
   end
 
@@ -62,14 +65,9 @@ class User < ActiveRecord::Base
     save!
   end
 
-  def clear_remember_me_token!(cookies)
+  def clear_remember_me_token!
     self.remember_me_token = nil
-    cookies.delete :remember_me_token
     save!
-  end
-
-  def admin?
-    return false if (admin == 0)
   end
 
   private
@@ -86,7 +84,7 @@ class User < ActiveRecord::Base
     def generate_token(token_type)
       token = loop do
         random_secure_token = SecureRandom.urlsafe_base64(nil, false)
-        break random_secure_token unless User.exists?(token_type.to_sym => random_secure_token)
+        break random_secure_token unless User.exists?(token_type => random_secure_token)
       end
       token
     end
