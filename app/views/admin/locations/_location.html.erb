@@ -1,0 +1,16 @@
+<tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+  <td class="list_description">
+    <dl>
+      <% location ||= @location %>
+      <dt><%= 'Address: ' + location.address %></dt>
+      <dd><%= 'Default: ' + location.default_location.to_s %></dd>
+      <dd><%= 'Opening Time: ' + location.opening_time.to_s %></dd>
+      <dd><%= 'Closing Time: ' + location.closing_time.to_s %></dd>
+      <%= link_to 'Show', admin_location_path(location) %>
+      <%= link_to 'Inventory', admin_location_inventory_items_path(location) %>
+      <%= link_to 'Edit', edit_admin_location_path(location) %>
+      <%= link_to 'Destroy1', [:admin, location], method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= link_to 'Destroy2', admin_location_path(location), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </dl>
+  </td>
+</tr>

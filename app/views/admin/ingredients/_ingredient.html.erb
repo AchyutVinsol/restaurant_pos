@@ -1,0 +1,16 @@
+<tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+  <td class="list_description">
+    <dl>
+      <% ingredient ||= @ingredient %>
+      <dt><%= 'Id: ' + ingredient.id.to_s %></dt>
+      <dt><%= 'Name: ' + ingredient.name %></dt>
+      <dd><%= 'Price: ' + ingredient.price.to_s %></dd>
+      <dd><%= 'Veg: ' + ingredient.veg.to_s %></dd>
+      <dd><%= 'Can request extra: ' + ingredient.can_request_extra.to_s %></dd>
+      <%= link_to 'Show', new_admin_ingredient_path %>
+      <%= link_to 'Edit', edit_admin_ingredient_path(ingredient) %>
+      <%= link_to 'Destroy1', [:admin, ingredient], method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= link_to 'Destroy2', admin_ingredient_path(ingredient), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </dl>
+  </td>
+</tr>
