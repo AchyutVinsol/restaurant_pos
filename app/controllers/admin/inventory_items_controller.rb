@@ -2,31 +2,38 @@ class Admin::InventoryItemsController  < Admin::BaseController
   before_action :set_inventory_item, only: [:show, :edit, :update, :destroy, :increase_quantity, :decrease_quantity]
 
   def index
-    # debugger
+
+    #FIXME_AB: 1. find the parent resource i.e ingredient or location in the before action @resource. redirect to back or home page if @resource is nil
+    #FIXME_AB: 2. @inventory_items = @resource.inventory_items
+
     if params[:location_id].present?
-      @inventory_items = Inventory_item.find_by(location_id: params[:location_id])
+      @inventory_items = InventoryItem.find_by(location_id: params[:location_id])
     elsif params[:ingredient_id].present?
-      @inventory_items = Inventory_item.find_by(ingredient_id: params[:ingredient_id])
+      @inventory_items = InventoryItem.find_by(ingredient_id: params[:ingredient_id])
     else
+      #FIXME_AB: no such case
       flash[:notice] = 'All inventory items displayed!'
-      @inventory_items = Inventory_item.all
+      @inventory_items = InventoryItem.all
     end
-    if @inventory_items.nil?
-      #FIXME_AB: remove this if on repairing the inventory
-      flash[:notice] = "The inventory for the corresponding foreign key id is empty! #{ params }"
-      @inventory_items = Inventory_item.all
-    end
+    # if @inventory_items.nil?
+    #   #FIXME_AB: remove this if on repairing the inventory
+    #   flash[:notice] = "The inventory for the corresponding foreign key id is empty! #{ params }"
+    #   @inventory_items = InventoryItem.all
+    # end
   end
 
+  #FIXME_AB: we don't need show
   def show
   end
 
+  #FIXME_AB: we don't need new
   def new
-    @inventory_item = Inventory_item.new
+    @inventory_item = InventoryItem.new
   end
 
+  #FIXME_AB: not needed
   def create
-    @inventory_item = Inventory_item.new()
+    @inventory_item = InventoryItem.new()
     if @inventory_item.save
       redirect_to @inventory_item, notice: 'Successfully added a new inventory item!'
     else
@@ -34,9 +41,11 @@ class Admin::InventoryItemsController  < Admin::BaseController
     end
   end
 
+  #FIXME_AB: not needed
   def edit
   end
 
+  #FIXME_AB: not needed
   def update
     update_params
     if @inventory_item.update(inventory_params)
@@ -46,6 +55,7 @@ class Admin::InventoryItemsController  < Admin::BaseController
     end
   end
 
+  #FIXME_AB: not needed. 
   def destroy
     @inventory_item.destroy
     redirect_to admin_location_inventory_items_path, notice: 'inventory item was successfully destroyed.'
@@ -54,13 +64,22 @@ class Admin::InventoryItemsController  < Admin::BaseController
   def increase_quantity
     quantity_increased = params[:increase_quantity]
     @inventory_item.quantity += quantity_increased.to_i
+    #FIXME_AB: why don't you do this @inventory_item.increase_quantity(params[:increase_quantity].to_i). This should return true false, based on this we'll prepare our response {status: success, qty: 50}, {status: error, errors: [...]}
     save_quantity    
   end
 
   def decrease_quantity
+    #FIXME_AB: same as above
     quantity_decreased = params[:decrease_quantity].to_i
     @inventory_item.quantity -= quantity_decreased
     save_quantity
+
+    # if @inventory_item.decrease_quantity(params.to_i)
+    #   render json: {status: "success", qty: @inventory_items.qty}
+    # else
+    #   render json{}
+    # end
+
   end
 
   private
@@ -76,6 +95,7 @@ class Admin::InventoryItemsController  < Admin::BaseController
       end
     end
 
+    #FIXME_AB: not needed
     def update_params
       if params[:increase_quantity].present?
         params[:inventory_params][:ingredient_id] = quantity + params[:increase_quantity]
@@ -87,7 +107,8 @@ class Admin::InventoryItemsController  < Admin::BaseController
     end
 
     def set_inventory_item
-      @inventory_item = Inventory_item.find(params[:id])
+      @inventory_item = InventoryItem.find(params[:id])
+      #FIXME_AB: what if not found
     end
 
     def inventory_item_params

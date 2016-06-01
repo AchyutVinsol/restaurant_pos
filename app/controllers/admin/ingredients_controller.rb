@@ -33,6 +33,7 @@ class Admin::IngredientsController < Admin::BaseController
   end
 
   def destroy
+    #FIXME_AB: what if not destroyed
     @ingredient.destroy
     redirect_to admin_ingredients_path, notice: 'Ingredient was successfully destroyed.'
   end
@@ -41,6 +42,7 @@ class Admin::IngredientsController < Admin::BaseController
 
     def set_ingredient
       @ingredient = Ingredient.find(params[:id])
+      #FIXME_AB: what if not found
     end
 
     def ingredient_params

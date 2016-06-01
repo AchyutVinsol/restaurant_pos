@@ -1,3 +1,4 @@
+#FIXME_AB: fix same issues as ingredients
 class Admin::LocationsController < Admin::BaseController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 

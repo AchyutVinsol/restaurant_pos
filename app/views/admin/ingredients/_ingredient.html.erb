@@ -8,6 +8,7 @@
   <td><%= link_to 'Show', admin_ingredient_path(ingredient) %>
       <%= link_to 'Inventory', admin_location_inventory_items_path(ingredient) %>
       <%= link_to 'Edit', edit_admin_ingredient_path(ingredient) %>
+      <% #FIXME_AB: "Are you sure to delete ingredent "Bun"? -%>
       <%= link_to 'Destroy1', [:admin, ingredient], method: :delete, data: { confirm: 'Are you sure?' } %>
       <%= link_to 'Destroy2', admin_ingredient_path(ingredient), method: :delete, data: {confirm: 'Are you sure?'} %>
   </td>

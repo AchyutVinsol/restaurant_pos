@@ -55,7 +55,7 @@
     </div>
   </div>
 </nav>
-<% if current_user && current_user.admin %>
+<% if current_user.admin? %>
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Admin Panel</h3>
