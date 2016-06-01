@@ -16,8 +16,8 @@ class PasswordResetsController < ApplicationController
   private
 
     def ensure_valid_user
-      @user = User.verified.find_by(forgot_password_token: params[:forgot_password_token])
-      if !@user
+      @user = User.verified.find_by(forgot_password_token: params[:forgot_password_token]) if params[:forgot_password_token].present?
+      if @user.nil?
         redirect_to home_path, notice: 'Invalid forgot password token!'
       end
     end

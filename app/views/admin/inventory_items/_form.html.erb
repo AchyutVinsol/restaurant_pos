@@ -1,0 +1,22 @@
+<div class="well well-sm">
+  <%= form_for(admin_location_inventories_path(location) , html: {class: 'form-horizontal'}, remote: true) do |f| %>
+    <%= render partial: 'shared/errors', locals: { object: @location } %>
+    <fieldset>
+      <legend>Enter location Details</legend>
+      <div class="form-group">
+        <%= f.label :quantity, "Available Quantity:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= location  %>
+          <%= f.button :-, class: "btn btn-default btn-info" %>
+          <%= f.text_field :quantity, class: "form-control" %>
+          <%= f.button :+, class: "btn btn-default btn-info" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-8 col-md-offset-2">
+          <%= f.submit "Submit", class: "btn btn-default btn-primary" %>
+        </div>
+      </div>
+    </fieldset>
+  <% end %>
+</div>

@@ -1,22 +1,24 @@
-<%= form_tag(password_resets_path, method: :post, class: 'form-horizontal') do %>
-  <fieldset>
-    <legend>Please enter a password.</legend>
-      <%= label_tag :password, "Password:", class: "col-md-2 control-label" %>
-      <div class="col-md-10">
-        <%= password_field_tag :password, class: "form-control" %>
+<div class="well well-sm">
+  <%= form_tag(password_resets_path, method: :post, class: 'form-horizontal') do %>
+    <fieldset>
+      <legend>Please enter a password.</legend>
+        <%= label_tag :password, "Password:", class: "col-md-2 control-label" %>
+        <div class="col-md-10">
+          <%= password_field_tag :password, class: "form-control" %>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <%= label_tag :password_confirmation, "Confirm Password:", class: "col-md-2 control-label" %>
-      <div class="col-md-10">
-        <%= password_field_tag :password_confirmation, class: "form-control" %>
+      <div class="form-group">
+        <%= label_tag :password_confirmation, "Confirm Password:", class: "col-md-2 control-label" %>
+        <div class="col-md-10">
+          <%= password_field_tag :password_confirmation, class: "form-control" %>
+        </div>
       </div>
-    </div>
-    <%= hidden_field_tag :forgot_password_token, params[:token] %>
-    <div class="form-group">
-      <div class="col-md-8 col-md-offset-2">
-        <%= submit_tag "Submit", class: "btn btn-default btn-primary" %>
+      <%= hidden_field_tag :forgot_password_token, params[:token] %>
+      <div class="form-group">
+        <div class="col-md-8 col-md-offset-2">
+          <%= submit_tag "Submit", class: "btn btn-default btn-primary" %>
+        </div>
       </div>
-    </div>
-  </fieldset>
-<% end %>
+    </fieldset>
+  <% end %>
+</div>

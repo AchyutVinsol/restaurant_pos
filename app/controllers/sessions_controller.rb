@@ -15,7 +15,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    current_user.clear_remember_me_token!(cookies)
+    current_user.clear_remember_me_token!
+    cookies.delete :remember_me_token   
     reset_session
     redirect_to home_url, notice: "You have been logged out successfully"
   end

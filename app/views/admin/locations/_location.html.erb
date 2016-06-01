@@ -1,0 +1,18 @@
+<% location ||= @location %>
+<tr>
+  <td><%= location.id %></td>
+  <td><%= location.name %></td>
+  <td><%= location.state %></td>
+  <td><%= location.city %></td>
+  <td><%= location.street_first %></td>
+  <td><%= location.street_second %></td>
+  <td><%= location.default_location %></td>
+  <td><%= location.opening_time %></td>
+  <td><%= location.closing_time %></td>
+  <td><%= link_to 'Show', admin_location_path(location) %>
+      <%= link_to 'Inventory', admin_location_inventory_items_path(location) %>
+      <%= link_to 'Edit', edit_admin_location_path(location) %>
+      <%= link_to 'Destroy1', [:admin, location], method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= link_to 'Destroy2', admin_location_path(location), method: :delete, data: { confirm: 'Are you sure?' } %>
+  </td>
+</tr>

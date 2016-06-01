@@ -1,0 +1,61 @@
+<div class="well well-sm">
+  <%= form_for([:admin, @location], html: {class: 'form-horizontal'}) do |f| %>
+    <%= render partial: 'shared/errors', locals: { object: @location } %>
+    <fieldset>
+      <legend>Enter location Details</legend>
+      <div class="form-group">
+        <%= f.label :name, "Name:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.text_field :name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :state, "State:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.text_field :state, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :city, "City:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.text_field :city, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :street_first, "Street line 1:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.text_field :street_first, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :street_second, "Street line 2:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.text_field :street_second, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :default_location, "Default:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.check_box :default_location %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :closing_time, "Closing time:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.time_select :closing_time %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :opening_time, "Opening time:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= f.time_select :opening_time %>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-8 col-md-offset-2">
+          <%= f.submit "Submit", class: "btn btn-default btn-primary" %>
+        </div>
+      </div>
+    </fieldset>
+  <% end %>
+</div>

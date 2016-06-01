@@ -11,7 +11,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160523142547) do
+ActiveRecord::Schema.define(version: 20160527111750) do
+
+  create_table "ingredients", force: :cascade do |t|
+    t.string   "name",              limit: 255
+    t.decimal  "price",                         precision: 8, scale: 2
+    t.boolean  "veg",                                                   default: true
+    t.boolean  "can_request_extra",                                     default: false
+    t.datetime "created_at",                                                            null: false
+    t.datetime "updated_at",                                                            null: false
+  end
+
+  add_index "ingredients", ["name"], name: "index_ingredients_on_name", using: :btree
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.integer  "location_id",   limit: 4
+    t.integer  "ingredient_id", limit: 4
+    t.decimal  "quantity",                precision: 10
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "inventory_items", ["ingredient_id"], name: "index_inventory_items_on_ingredient_id", using: :btree
+  add_index "inventory_items", ["location_id"], name: "index_inventory_items_on_location_id", using: :btree
+
+  create_table "locations", force: :cascade do |t|
+    t.string   "name",             limit: 255
+    t.string   "state",            limit: 255
+    t.string   "city",             limit: 255
+    t.string   "street_first",     limit: 255
+    t.string   "street_second",    limit: 255
+    t.boolean  "default_location",             default: false
+    t.datetime "opening_time"
+    t.datetime "closing_time"
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+  end
+
+  add_index "locations", ["name"], name: "index_locations_on_name", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "first_name",                      limit: 255
@@ -34,4 +71,6 @@ ActiveRecord::Schema.define(version: 20160523142547) do
   add_index "users", ["remember_me_token"], name: "index_users_on_remember_me_token", using: :btree
   add_index "users", ["verification_token"], name: "index_users_on_verification_token", using: :btree
 
+  add_foreign_key "inventory_items", "ingredients"
+  add_foreign_key "inventory_items", "locations"
 end

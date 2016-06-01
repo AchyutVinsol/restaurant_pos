@@ -15,6 +15,30 @@ Rails.application.routes.draw do
     delete 'logout' => :destroy
   end
 
+  namespace :admin do
+
+    resources :locations do
+      resources :inventory_items, only: [:index]
+      resources :inventory_items, only: [], shallow: true  do
+        member do 
+          patch :increase_quantity
+          patch :decrease_quantity
+        end
+      end
+    end
+
+    resources :ingredients do
+      resources :inventory_items, only: [:index]
+      # resources :inventory_items, only: [], shallow: true  do
+      #   member do 
+      #     patch :increase_quantity
+      #     patch :decrease_quantity
+      #   end
+      # end
+    end
+
+  end
+
   resources :users, only: [:create, :new]
 
 

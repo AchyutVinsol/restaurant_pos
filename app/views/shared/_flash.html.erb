@@ -1,7 +1,13 @@
-<% if flash[:notice] || flash[:error] || flash[:alert]%>
-  <div class="alert alert-dismissible alert-success">
-    <p id="notice"><%= flash[:notice] %></p>
-    <p id="error"><%= flash[:error] %></p>
-    <p id="alert"><%= flash[:alert] %></p>
+<% if flash[:notice] %>
+  <div>
+    <p class="alert alert-dismissible alert-success"><%= flash[:notice] %></p>
+  </div>
+<% elsif flash[:error] %>
+  <div>
+    <p class="alert alert-dismissible alert-warning"><%= flash[:alert] %></p>
+  </div>
+<% elsif flash[:alert] %>
+  <div>
+    <p class="alert alert-dismissible alert-danger"><%= flash[:error] %></p>
   </div>
 <% end %>
