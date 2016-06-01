@@ -1,6 +1,6 @@
 <% if object.errors.any? %>
   <div id="error_explanation">
-    <h2><%= "These errors prohibited #{ object.class.name } from being saved:" + pluralize(object.errors.count, "error") %></h2>
+    <h2><%= "These errors prohibited  " + object.class.name + " from being saved:" + pluralize(object.errors.count, "error") %></h2>
     <ul>
       <% object.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>

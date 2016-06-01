@@ -17,7 +17,7 @@ class Admin::LocationsController < Admin::BaseController
     if @location.save
       redirect_to [:admin, @location], notice: 'Successfully added a new locaton!'
     else
-      redirect_to [:admin, new_location_path], notice: 'Could not add location because:'
+      render :new
     end
   end
 
@@ -28,7 +28,7 @@ class Admin::LocationsController < Admin::BaseController
     if @location.update(location_params)
       redirect_to [:admin, @location], notice: 'location details were successfully updated.'
     else
-      redirect_to [:admin, edit_location_path], notice: 'location update failed because:'
+      render :edit
     end
   end
 
@@ -44,7 +44,7 @@ class Admin::LocationsController < Admin::BaseController
     end
 
     def location_params
-      params.require(:location).permit(:address, :default, :opening_time, :closing_time)
+      params.require(:location).permit(:name, :state, :city, :street_first, :street_second, :default, :opening_time, :closing_time)
     end
 
 end

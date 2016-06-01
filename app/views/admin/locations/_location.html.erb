@@ -1,7 +1,11 @@
 <% location ||= @location %>
 <tr>
   <td><%= location.id %></td>
-  <td><%= location.address %></td>
+  <td><%= location.name %></td>
+  <td><%= location.state %></td>
+  <td><%= location.city %></td>
+  <td><%= location.street_first %></td>
+  <td><%= location.street_second %></td>
   <td><%= location.default_location %></td>
   <td><%= location.opening_time %></td>
   <td><%= location.closing_time %></td>

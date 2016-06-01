@@ -30,7 +30,7 @@ class Admin::InventoryItemsController  < Admin::BaseController
     if @inventory_item.save
       redirect_to @inventory_item, notice: 'Successfully added a new inventory item!'
     else
-      redirect_to new_inventory_item_path, notice: 'Could not add inventory item because:'
+      render :new
     end
   end
 
@@ -42,7 +42,7 @@ class Admin::InventoryItemsController  < Admin::BaseController
     if @inventory_item.update(inventory_params)
       redirect_to @inventory_item, notice: 'inventory item details were successfully updated.'
     else
-      redirect_to edit_admin_location_inventory_item_path, notice: 'inventory item update failed because:'
+      render :edit
     end
   end
 

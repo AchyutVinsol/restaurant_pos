@@ -15,9 +15,9 @@ class Admin::IngredientsController < Admin::BaseController
   def create
     @ingredient = Ingredient.new(ingredient_params)
     if @ingredient.save
-      redirect_to [:admin, @ingredient], notice: 'Successfully added a new locaton!'
+      redirect_to [:admin, @ingredient], notice: 'Successfully added a new ingredient!'
     else
-      redirect_to [:admin, new_ingredient_path], notice: 'Could not add ingredient because:'
+      render :new
     end
   end
 
@@ -28,7 +28,7 @@ class Admin::IngredientsController < Admin::BaseController
     if @ingredient.update(ingredient_params)
       redirect_to [:admin, @ingredient], notice: 'Ingredient details were successfully updated.'
     else
-      redirect_to [:admin, edit_ingredient_path], notice: 'Ingredient update failed because:'
+      render :edit
     end
   end
 
