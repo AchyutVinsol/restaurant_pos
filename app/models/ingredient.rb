@@ -1,7 +1,7 @@
 class Ingredient < ActiveRecord::Base
   after_commit :create_inventory_items_of_ingredient
 
-  has_many :inventory_items
+  has_many :inventory_items, dependent: :destroy
   has_many :locations, through: :inventory_items
 
   private

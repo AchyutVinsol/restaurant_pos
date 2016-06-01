@@ -1,7 +1,7 @@
 class Location < ActiveRecord::Base
   after_commit :create_inventory_items_of_location
 
-  has_many :inventory_items
+  has_many :inventory_items, dependent: :destroy
   has_many :ingredients, through: :inventory_items
 
   private

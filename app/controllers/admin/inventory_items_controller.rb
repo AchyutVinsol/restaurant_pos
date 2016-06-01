@@ -2,7 +2,20 @@ class Admin::InventoryItemsController  < Admin::BaseController
   before_action :set_inventory_item, only: [:show, :edit, :update, :destroy, :increase_quantity, :decrease_quantity]
 
   def index
-    @inventory_items = Inventory_item.all
+    # debugger
+    if params[:location_id].present?
+      @inventory_items = Inventory_item.find_by(location_id: params[:location_id])
+    elsif params[:ingredient_id].present?
+      @inventory_items = Inventory_item.find_by(ingredient_id: params[:ingredient_id])
+    else
+      flash[:notice] = 'All inventory items displayed!'
+      @inventory_items = Inventory_item.all
+    end
+    if @inventory_items.nil?
+      #FIXME_AB: remove this if on repairing the inventory
+      flash[:notice] = "The inventory for the corresponding foreign key id is empty! #{ params }"
+      @inventory_items = Inventory_item.all
+    end
   end
 
   def show
@@ -13,9 +26,7 @@ class Admin::InventoryItemsController  < Admin::BaseController
   end
 
   def create
-    # debugger
     @inventory_item = Inventory_item.new()
-    # @inventory_item = Inventory_item.new(inventory_item_params)
     if @inventory_item.save
       redirect_to @inventory_item, notice: 'Successfully added a new inventory item!'
     else
@@ -27,7 +38,6 @@ class Admin::InventoryItemsController  < Admin::BaseController
   end
 
   def update
-    # debugger
     update_params
     if @inventory_item.update(inventory_params)
       redirect_to @inventory_item, notice: 'inventory item details were successfully updated.'
@@ -42,24 +52,9 @@ class Admin::InventoryItemsController  < Admin::BaseController
   end
 
   def increase_quantity
-    # if params[:inventory_item][:increase_quantity].present?
-    #FIXME_AB: before_acion
-    # if inventory_item.increase_quantity(4)
-    #   successfully
-    # else
-    #   failure
-    # end
-    # debugger
     quantity_increased = params[:increase_quantity]
     @inventory_item.quantity += quantity_increased.to_i
     save_quantity    
-    # if @inventory_item.can_increase_quantity?(quantity_increased)
-    #   #success
-    #   @inventory_item.quantity += quantity_increased
-    #   @inventory_item.save
-    # else
-    #   #faliure
-    # end
   end
 
   def decrease_quantity
@@ -71,16 +66,10 @@ class Admin::InventoryItemsController  < Admin::BaseController
   private
 
     def save_quantity
-      # @inventory_item.save
       respond_to do |format|
         if @inventory_item.save
-          # success
-          # debugger
           msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
-          # format.json { head :ok }
           format.json  { render json: @inventory_item.quantity }
-          # format.json  { render json: ok }
-          # format.js    { render json: @inventory_item }
         else
           # faliure redirect to some place
         end

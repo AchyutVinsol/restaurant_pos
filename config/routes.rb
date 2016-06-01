@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+
     resources :locations do
       resources :inventory_items, only: [:index]
       resources :inventory_items, only: [], shallow: true  do
@@ -24,20 +25,18 @@ Rails.application.routes.draw do
           patch :decrease_quantity
         end
       end
-      
-      # post 'inventory_items/:inventory_item_id/increase', to: "inventory_items#increase_quantity", as: :increase_inventory
-      # post 'inventory_items/:inventory_item_id/decrease', to: "inventory_items#decrease_quantity", as: :decrease_inventory
-      
-      # patch 'inventory_items/:inventory_item_id/increase', to: "inventory_items#increase_quantity", as: :increase_inventory 
-      # patch 'inventory_items/:inventory_item_id/decrease', to: "inventory_items#decrease_quantity", as: :decrease_inventory 
     end
-    # patch "inventory_items/:inventory_item_id", to
 
     resources :ingredients do
-      resources :inventory_items
+      resources :inventory_items, only: [:index]
+      # resources :inventory_items, only: [], shallow: true  do
+      #   member do 
+      #     patch :increase_quantity
+      #     patch :decrease_quantity
+      #   end
+      # end
     end
 
-    # get 'decrease', to: "inventory_items#decrease_quantity", as: :decrease_quantity
   end
 
   resources :users, only: [:create, :new]
