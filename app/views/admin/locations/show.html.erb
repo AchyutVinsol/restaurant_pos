@@ -1,37 +1,37 @@
-<div class='col-md-11'>
-  <h3><%= "Location #{ @location.name }" %>
+<div class = "row">
+  <div class='col-md-12'>
+    <div class="btn-group pull-right">
+      <%= link_to 'New location', new_admin_location_path, class: "btn btn-primary" %>
+      <%= link_to 'Inventory', admin_location_inventory_items_path(@location), class: 'btn btn-info' %>
+      <%= link_to 'Edit', edit_admin_location_path(@location), class: 'btn btn-warning' %>
+      <%= link_to 'Destroy', admin_location_path(@location), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+    </div>
+    <h3><%= "Location: #{ @location.name }" %>
+    </h3>
     <% if @location.default_location %>
       <span class="label label-success">DEFAULT</span>
     <% else %>
       <span class="label label-warning">NOT DEFAULT</span>
     <% end %>
-  </h3>
-  </br>
-  <h4>
-    <%= "State: #{ @location.state }" %>
-  </h4>
-  <h4>
-    <%= "City: #{ @location.city }" %>
-  </h4>
-  <h4>
-    <%= "Street line 1: #{ @location.street_first }" %>
-  </h4>
-  <h4>
-    <%= "Street line 2: #{ @location.street_second }" %>
-  </h4>
-  <h4>
-    <%= "Opens at: #{ @location.opening_time.strftime("%I:%M%p") }" %>
-  </h4>
-  <h4>
-    <%= "Closes at: #{ @location.closing_time.strftime("%I:%M%p") }" %>
-  </h4>
-  </br>
-  <div class="btn-group">
-    <%= link_to 'Show', admin_location_path(@location), class: 'btn btn-info' %>
-    <%= link_to 'Inventory', admin_location_inventory_items_path(@location), class: 'btn btn-primary' %>
-    <%= link_to 'Edit', edit_admin_location_path(@location), class: 'btn btn-warning' %>
-    <%= link_to 'Destroy', admin_location_path(@location), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+    </br>
+    <h4>
+      <%= "Street line 1: #{ @location.street_first }" %>
+    </h4>
+    <h4>
+      <%= "Street line 2: #{ @location.street_second }" %>
+    </h4>
+    <h4>
+      <%= "City: #{ @location.city }" %>
+    </h4>
+    <h4>
+      <%= "State: #{ @location.state }" %>
+    </h4>
+    <h4>
+      <%= "Opens at: #{ @location.opening_time.strftime("%I:%M%p") }" %>
+    </h4>
+    <h4>
+      <%= "Closes at: #{ @location.closing_time.strftime("%I:%M%p") }" %>
+    </h4>
+    </br>
   </div>
 </div>
-<br/>
-<%= link_to 'New location', new_admin_location_path %>

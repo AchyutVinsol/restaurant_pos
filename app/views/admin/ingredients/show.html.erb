@@ -1,25 +1,25 @@
-<div class='col-md-11'>
-  <h3><%= "Ingredient #{ @ingredient.name }" %>
+<div class = "row">
+  <div class='col-md-12'>
+    <div class="btn-group pull-right">
+      <%= link_to 'New ingredient', new_admin_ingredient_path, class: 'btn btn-primary' %>
+      <%= link_to 'Inventory', admin_ingredient_inventory_items_path(@ingredient), class: 'btn btn-info' %>
+      <%= link_to 'Edit', edit_admin_ingredient_path(@ingredient), class: 'btn btn-warning' %>
+      <%= link_to 'Destroy', admin_ingredient_path(@ingredient), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' %>
+    </div>
+    <h3><%= "Ingredient #{ @ingredient.name }" %>
+    </h3>
     <% if @ingredient.veg %>
       <span class="label label-success">VEG</span>
     <% else %>
       <span class="label label-warning">NON-VEG</span>
     <% end %>
-  </h3>
-  </br>
-  <h4>
-    <%= "Price: #{ number_to_currency(@ingredient.price) }" %>
-  </h4>
-  <h4>
-    <%= "Can request extra?: #{ @ingredient.can_request_extra }" %>
-  </h4>
-  </br>
-  <div class="btn-group">
-    <%= link_to 'Show', admin_ingredient_path(@ingredient), class: 'btn btn-info' %>
-    <%= link_to 'Inventory', admin_ingredient_inventory_items_path(@ingredient), class: 'btn btn-primary' %>
-    <%= link_to 'Edit', edit_admin_ingredient_path(@ingredient), class: 'btn btn-warning' %>
-    <%= link_to 'Destroy', admin_ingredient_path(@ingredient), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' %>
+    </br>
+    <h4>
+      <%= "Price: #{ number_to_currency(@ingredient.price) }" %>
+    </h4>
+    <h4>
+      <%= "Can request extra?: #{ @ingredient.can_request_extra }" %>
+    </h4>
+    </br>
   </div>
 </div>
-<br/>
-<%= link_to 'New ingredient', new_admin_ingredient_path %>
