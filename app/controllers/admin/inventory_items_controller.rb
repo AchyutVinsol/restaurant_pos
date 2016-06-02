@@ -23,7 +23,7 @@ class Admin::InventoryItemsController  < Admin::BaseController
         p 'rendeing success!!'
         render json: { status: 'success', qty: @inventory_item.quantity }
       else
-        render json: { status: 'error', errors: @inventory_item.errors }
+        render json: { status: 'error', errors: @inventory_item.errors.full_messages }
       end
     end
 

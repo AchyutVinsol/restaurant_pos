@@ -17,8 +17,9 @@
 
 class Ingredient < ActiveRecord::Base
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
-  validates :price, numericality: { greater_than_or_equal_to: 0.01 }, unless: 'price.blank?', presence: true
+  validates :price, :name, presence: true
+  validates :name, uniqueness: { case_sensitive: false }
+  validates :price, numericality: { greater_than_or_equal_to: 0.01 }, unless: 'price.blank?'
 
   has_many :inventory_items, dependent: :destroy
   has_many :locations, through: :inventory_items
@@ -30,7 +31,7 @@ class Ingredient < ActiveRecord::Base
     def create_inventory_items
       #create an invetory item of ingredient for each location
       Location.find_each do |location|
-        inventory_item = location.invetory_items.new
+        inventory_item = location.inventory_items.new
         inventory_item.ingredient_id = id
         inventory_item.quantity = 0
         inventory_item.save!

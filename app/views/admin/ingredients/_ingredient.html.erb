@@ -5,9 +5,12 @@
   <td><%= ingredient.price %></td>
   <td><%= ingredient.veg %></td>
   <td><%= ingredient.can_request_extra %></td>
-  <td><%= link_to 'Show', admin_ingredient_path(ingredient) %>
-      <%= link_to 'Inventory', admin_ingredient_inventory_items_path(ingredient) %>
-      <%= link_to 'Edit', edit_admin_ingredient_path(ingredient) %>
-      <%= link_to 'Destroy', admin_ingredient_path(ingredient), method: :delete, data: {confirm: 'Are you sure?'} %>
+  <td>
+    <div class="btn-group">
+      <%= link_to 'Show', admin_ingredient_path(ingredient), class: 'btn btn-info' %>
+      <%= link_to 'Inventory', admin_ingredient_inventory_items_path(ingredient), class: 'btn btn-primary' %>
+      <%= link_to 'Edit', edit_admin_ingredient_path(ingredient), class: 'btn btn-warning' %>
+      <%= link_to 'Destroy', admin_ingredient_path(ingredient), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' %>
+    </div>
   </td>
 </tr>
