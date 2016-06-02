@@ -36,7 +36,7 @@ class Admin::LocationsController < Admin::BaseController
     if @location.destroy
       redirect_to admin_locations_path, notice: 'location was successfully destroyed.'
     else
-      redirect_to admin_locations_path, notice: "Unable to destroy location #{ @location.name } because #{ @location.errors[:base].to_s }."
+      redirect_to admin_locations_path, notice: "Unable to destroy location #{ @location.name } because #{ @location.errors[:base] }."
     end
   end
 

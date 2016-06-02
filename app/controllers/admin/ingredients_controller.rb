@@ -36,7 +36,7 @@ class Admin::IngredientsController < Admin::BaseController
     if @ingredient.destroy
       redirect_to admin_ingredients_path, notice: 'Ingredient was successfully destroyed.'
     else
-      redirect_to admin_ingredients_path, notice: "Unable to destroy ingredient #{ @ingredient.name } because #{ @ingredient.errors[:base].to_s }"
+      redirect_to admin_ingredients_path, notice: "Unable to destroy ingredient #{ @ingredient.name } because #{ @ingredient.errors[:base] }"
     end
   end
 

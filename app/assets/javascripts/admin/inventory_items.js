@@ -1,7 +1,7 @@
 $(document).ready(function(){
   $('[data-behaviour=change_quantity]').on('ajax:success', function(event, data, status, xhr) {
 
-    if (data.status == "success") {
+    if (data.status === "success") {
       quantity_display = $(event.target).closest("tr").children("td[data-class=quantity]");
       quantity_display.text(data.qty);
       quantity_display.effect("highlight", {}, 1500);
