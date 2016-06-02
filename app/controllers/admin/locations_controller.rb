@@ -1,4 +1,3 @@
-#FIXME_AB: fix same issues as ingredients
 class Admin::LocationsController < Admin::BaseController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
@@ -34,14 +33,22 @@ class Admin::LocationsController < Admin::BaseController
   end
 
   def destroy
-    @location.destroy
-    redirect_to admin_locations_path, notice: 'location was successfully destroyed.'
+    if @location.destroy
+      redirect_to admin_locations_path, notice: 'location was successfully destroyed.'
+    else
+      redirect_to admin_locations_path, notice: "Unable to destroy location #{ @location.name } because #{ @location.errors[:base].to_s }."
+    end
   end
 
   private
 
     def set_location
-      @location = Location.find(params[:id])
+      begin
+        @location = Location.find(params[:id])
+      rescue ActiveRecord::RecordNotFound  
+        redirect_to admin_locations_path, notice: "No location with id #{ params[:id] } found!"
+        return
+      end
     end
 
     def location_params

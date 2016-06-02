@@ -3,16 +3,15 @@
   <td><%= inventory_item.id %></td>
   <td><%= Ingredient.find(inventory_item.ingredient_id).name %></td>
   <td><%= Location.find(inventory_item.location_id).name %></td>
-  <td data-class='quantity'><%= inventory_item.quantity %></td>
   <td>
-    <%= form_for(inventory_item, url: increase_quantity_admin_inventory_item_path(inventory_item) , html: {class: 'form-horizontal', :"data-behaviour" => 'change_quantity'}, remote: true, foramt: :json, data: { type: 'script' } ) do |f| %>
+    <%= form_for(inventory_item, url: increase_quantity_admin_inventory_item_path(inventory_item) , html: {class: 'form-horizontal', :"data-behaviour" => 'change_quantity'}, remote: true, foramt: :json ) do |f| %>
       <%= f.button :+, class: "btn btn-default btn-success" %>
       <%= text_field_tag :increase_quantity %>
     <% end %>
   </td>
+  <td data-class='quantity'><%= inventory_item.quantity %></td>
   <td>
-  <% #FIXME_AB: use disable option -%>
-    <%= form_for(inventory_item, url: decrease_quantity_admin_inventory_item_path(inventory_item) , html: {class: 'form-horizontal', :"data-behaviour" => 'change_quantity'}, remote: true, foramt: :json, data: { type: 'script' } ) do |f| %>
+    <%= form_for(inventory_item, url: decrease_quantity_admin_inventory_item_path(inventory_item) , html: {class: 'form-horizontal', :"data-behaviour" => 'change_quantity'}, remote: true, foramt: :json ) do |f| %>
       <%= text_field_tag :decrease_quantity %>
       <%= f.button :-, class: "btn btn-default btn-danger" %>
     <% end %>

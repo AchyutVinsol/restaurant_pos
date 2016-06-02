@@ -24,16 +24,24 @@ class InventoryItem < ActiveRecord::Base
   belongs_to :ingredient
   belongs_to :location
 
-  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  #FIXME_AB: validates uniquness of qty scope with location and ingredient
+  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, uniqueness: { scope: [:location_id, :ingredient_id] }
 
-  #FIXME_AB: both these methods not requried
-  def can_increase_quantity?(quantity_increased)
-    quantity_increased > 0
+  def increase_quantity(value)
+    self.quantity += value
+    boolean_save
   end
 
-  def can_decrease_quantity?(quantity_decreased)
-    quantity_decreased > quantity
+  def decrease_quantity(value)
+    self.quantity -= value
+    boolean_save
+  end
+
+  def boolean_save
+    if save
+      return true
+    else
+      return false
+    end
   end
 
 end

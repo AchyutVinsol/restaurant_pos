@@ -30,13 +30,10 @@ class Ingredient < ActiveRecord::Base
     def create_inventory_items
       #create an invetory item of ingredient for each location
       Location.all.find_each do |location|
-        #FIXME_AB: location.invetory_items.new
-        inventory_item = InventoryItem.new
+        inventory_item = location.invetory_items.new
         inventory_item.ingredient_id = id
-        inventory_item.location_id = location.id
         inventory_item.quantity = 0
-        inventory_item.save
-        #FIXME_AB: since it is in after_create, we need to ensure that records are created, else revert the transation. so save!
+        inventory_item.save!
       end
     end
 end

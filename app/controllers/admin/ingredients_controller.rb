@@ -15,7 +15,7 @@ class Admin::IngredientsController < Admin::BaseController
   def create
     @ingredient = Ingredient.new(ingredient_params)
     if @ingredient.save
-      redirect_to [:admin, @ingredient], notice: 'Successfully added a new ingredient!'
+      redirect_to admin_ingredient_path(@ingredient), notice: 'Successfully added a new ingredient!'
     else
       render :new
     end
@@ -26,23 +26,29 @@ class Admin::IngredientsController < Admin::BaseController
 
   def update
     if @ingredient.update(ingredient_params)
-      redirect_to [:admin, @ingredient], notice: 'Ingredient details were successfully updated.'
+      redirect_to admin_ingredient_path(@ingredient), notice: 'Ingredient details were successfully updated.'
     else
       render :edit
     end
   end
 
   def destroy
-    #FIXME_AB: what if not destroyed
-    @ingredient.destroy
-    redirect_to admin_ingredients_path, notice: 'Ingredient was successfully destroyed.'
+    if @ingredient.destroy
+      redirect_to admin_ingredients_path, notice: 'Ingredient was successfully destroyed.'
+    else
+      redirect_to admin_ingredients_path, notice: "Unable to destroy ingredient #{ @ingredient.name } because #{ @ingredient.errors[:base].to_s }"
+    end
   end
 
   private
 
     def set_ingredient
-      @ingredient = Ingredient.find(params[:id])
-      #FIXME_AB: what if not found
+      begin
+        @ingredient = Ingredient.find(params[:id])
+      rescue ActiveRecord::RecordNotFound  
+        redirect_to admin_ingredients_path, notice: "No ingredient with id #{ params[:id] } found!"
+        return
+      end
     end
 
     def ingredient_params
