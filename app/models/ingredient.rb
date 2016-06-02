@@ -29,7 +29,7 @@ class Ingredient < ActiveRecord::Base
 
     def create_inventory_items
       #create an invetory item of ingredient for each location
-      Location.all.find_each do |location|
+      Location.find_each do |location|
         inventory_item = location.invetory_items.new
         inventory_item.ingredient_id = id
         inventory_item.quantity = 0
