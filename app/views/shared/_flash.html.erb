@@ -4,10 +4,10 @@
   </div>
 <% elsif flash[:error] %>
   <div>
-    <p class="alert alert-dismissible alert-warning"><%= flash[:error] %></p>
+    <p class="alert alert-dismissible alert-danger"><%= flash[:error] %></p>
   </div>
 <% elsif flash[:alert] %>
   <div>
-    <p class="alert alert-dismissible alert-danger"><%= flash[:alert] %></p>
+    <p class="alert alert-dismissible alert-warning"><%= flash[:alert] %></p>
   </div>
 <% end %>
