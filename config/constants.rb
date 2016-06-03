@@ -4,3 +4,4 @@ REGEXP = {
   email: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
   digit: /\d/
 }
+MINIMUM_SHIFT_HOURS = 6

@@ -6,6 +6,12 @@ class ApplicationController < ActionController::Base
 
   protected
 
+    def ensure_logged_in
+      if !current_user
+        redirect_to(home_url, notice: 'You are not logged in!')
+      end
+    end
+
     def current_user
       @current_user ||= find_user_by_session_or_cookie
     end

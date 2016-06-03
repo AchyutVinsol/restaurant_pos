@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                              :integer          not null, primary key
+#  first_name                      :string(255)
+#  last_name                       :string(255)
+#  email                           :string(255)
+#  password_digest                 :string(255)
+#  admin                           :boolean          default(FALSE)
+#  verified_at                     :datetime         default(NULL)
+#  verification_token              :string(255)
+#  verification_token_expiry_at    :datetime
+#  forgot_password_token           :string(255)
+#  forgot_password_token_expiry_at :datetime
+#  remember_me_token               :string(255)
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#
+# Indexes
+#
+#  index_users_on_email                  (email)
+#  index_users_on_forgot_password_token  (forgot_password_token)
+#  index_users_on_remember_me_token      (remember_me_token)
+#  index_users_on_verification_token     (verification_token)
+#
+
 class User < ActiveRecord::Base
   has_secure_password
 
