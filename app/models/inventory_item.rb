@@ -28,20 +28,12 @@ class InventoryItem < ActiveRecord::Base
 
   def increase_quantity(value)
     self.quantity += value
-    boolean_save
+    save
   end
 
   def decrease_quantity(value)
     self.quantity -= value
-    boolean_save
-  end
-
-  def boolean_save
-    if save
-      return true
-    else
-      return false
-    end
+    save
   end
 
 end

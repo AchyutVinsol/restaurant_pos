@@ -1,20 +1,24 @@
-<div class='col-md-8'>
-  <h1>Listing ingredients</h1>
-  <table  class="table table-striped table-hover" >
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Veg</th>
-        <th>Can request extra?</th>
-        <th>Admin Options</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= render(@ingredients) %>
-    </tbody>
-  </table>
+<div class = "row">
+  <div class='col-md-12'>
+    <div class="btn-group pull-right">
+      <%= link_to 'New ingredient', new_admin_ingredient_path, class: 'btn btn-primary' %>
+    </div>
+    <h3>Listing ingredients</h3>
+    <table  class="table table-striped table-hover" >
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Veg</th>
+          <th>Can request extra?</th>
+          <th>Admin Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render(@ingredients) %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<%= link_to 'New ingredient', new_admin_ingredient_path %>

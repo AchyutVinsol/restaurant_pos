@@ -1,5 +1,6 @@
 class Admin::LocationsController < Admin::BaseController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
+  #FIXME_AB: DONE ensure single default
 
   def index
     @locations = Location.all
@@ -45,14 +46,14 @@ class Admin::LocationsController < Admin::BaseController
     def set_location
       begin
         @location = Location.find(params[:id])
-      rescue ActiveRecord::RecordNotFound  
+      rescue ActiveRecord::RecordNotFound
         redirect_to admin_locations_path, notice: "No location with id #{ params[:id] } found!"
         return
       end
     end
 
     def location_params
-      params.require(:location).permit(:name, :state, :city, :street_first, :street_second, :default, :opening_time, :closing_time)
+      params.require(:location).permit(:name, :state, :city, :street_first, :street_second, :default_location, :opening_time, :closing_time)
     end
 
 end

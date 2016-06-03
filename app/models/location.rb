@@ -30,8 +30,24 @@ class Location < ActiveRecord::Base
   validates_with ShiftValidator
 
   after_create :create_inventory_items
+  before_save :ensure_single_default
 
   private
+
+    def ensure_single_default
+      if default_location
+        begin
+          current_default = Location.where(default_location: true).take
+          if current_default
+            current_default.default_location = false
+            current_default.save
+          end
+        rescue ActiveRecord::RecordNotFound
+          #do nothing?
+          return
+        end
+      end
+    end
 
     def create_inventory_items
       #create an invetory item of location for each ingredient

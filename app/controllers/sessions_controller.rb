@@ -8,7 +8,11 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email])
     if user && (user.verified? && user.authenticate(params[:password]))
       sign_in(user, params[:remember_me])
-      redirect_to home_url, alert: "Hi #{ user.first_name }, you have been successfully loggedin!!"
+      if user.admin
+        redirect_to admin_locations_path, alert: "Hello admin #{ user.first_name }, you have been successfully loggedin!!"
+      else
+        redirect_to home_url, alert: "Hi #{ user.first_name }, you have been successfully loggedin!!"
+      end
     else
       redirect_to login_url, alert: "Invalid or unverified user/password combination."
     end
