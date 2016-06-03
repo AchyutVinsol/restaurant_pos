@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 
+  #FIXME_AB: DONE make an admin route /admin
   root 'pages#show', as: 'home', via: :all, page: "home"
+
+  get "admin", to: "admin/locations#index"
 
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create, :new]
