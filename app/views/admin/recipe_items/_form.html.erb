@@ -1,0 +1,6 @@
+ingredients = Ingredient.all.map { |x| [x.name, x.id] }
+<%= builder.fields_for :recipe_item do |li| %>
+  <%= li.select :ingredient, ingredients %>
+  <%= li.number_field :qty %>
+  <%= li.link_to_remove "Remove ingredient" %>
+<% end %>

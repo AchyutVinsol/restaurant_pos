@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160527111750) do
+ActiveRecord::Schema.define(version: 20160603080041) do
 
   create_table "ingredients", force: :cascade do |t|
     t.string   "name",              limit: 255
@@ -50,6 +50,30 @@ ActiveRecord::Schema.define(version: 20160527111750) do
 
   add_index "locations", ["name"], name: "index_locations_on_name", using: :btree
 
+  create_table "meals", force: :cascade do |t|
+    t.string   "name",               limit: 255
+    t.decimal  "price",                          precision: 8, scale: 2
+    t.string   "image_file_name",    limit: 255
+    t.string   "image_content_type", limit: 255
+    t.integer  "image_file_size",    limit: 4
+    t.datetime "image_updated_at"
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+  end
+
+  add_index "meals", ["name"], name: "index_meals_on_name", using: :btree
+
+  create_table "recipe_items", force: :cascade do |t|
+    t.integer  "ingredient_id", limit: 4
+    t.integer  "meal_id",       limit: 4
+    t.decimal  "quantity",                precision: 10
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "recipe_items", ["ingredient_id"], name: "index_recipe_items_on_ingredient_id", using: :btree
+  add_index "recipe_items", ["meal_id"], name: "index_recipe_items_on_meal_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "first_name",                      limit: 255
     t.string   "last_name",                       limit: 255
@@ -73,4 +97,6 @@ ActiveRecord::Schema.define(version: 20160527111750) do
 
   add_foreign_key "inventory_items", "ingredients"
   add_foreign_key "inventory_items", "locations"
+  add_foreign_key "recipe_items", "ingredients"
+  add_foreign_key "recipe_items", "meals"
 end

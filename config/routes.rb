@@ -32,12 +32,10 @@ Rails.application.routes.draw do
 
     resources :ingredients do
       resources :inventory_items, only: [:index]
-      # resources :inventory_items, only: [], shallow: true  do
-      #   member do 
-      #     patch :increase_quantity
-      #     patch :decrease_quantity
-      #   end
-      # end
+    end
+
+    resources :meals do
+      resources :recipe_items
     end
 
   end

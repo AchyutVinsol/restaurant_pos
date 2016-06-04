@@ -23,6 +23,8 @@ class Ingredient < ActiveRecord::Base
 
   has_many :inventory_items, dependent: :destroy
   has_many :locations, through: :inventory_items
+  has_many :recipe_items, dependent: :destroy
+  has_many :meals, through: :recipe_items
 
   after_create :create_inventory_items
 
