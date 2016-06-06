@@ -1,8 +1,8 @@
 <div class="well well-sm">
   <%= nested_form_for([:admin, @meal], html: {class: 'form-horizontal'}) do |builder| %>
-    <%= render partial: 'shared/errors', locals: { object: @location } %>
+    <%= render partial: 'shared/errors', locals: { object: @meal } %>
     <fieldset>
-      <legend>Enter location Details</legend>
+      <legend>Enter Meal Details</legend>
       <div class="form-group">
         <%= builder.label :name, "Name:", class: "col-md-2 control-label" %>
         <div class="col-md-8">
@@ -10,18 +10,19 @@
         </div>
       </div>
       <div class="form-group">
-        <%= f.label :price, "Price:", class: "col-md-2 control-label" %>
+        <%= builder.label :image, "Image:", class: "col-md-2 control-label" %>
         <div class="col-md-8">
-          <%= f.number_field :price, class: "form-control", step: "0.01" %>
+          <%= builder.file_field :image %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= builder.label :price, "Price:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= builder.number_field :price, class: "form-control", step: "0.01" %>
         </div>
       </div>
       <%= render partial: 'admin/recipe_items/form', locals: { object: builder } %>
-      <%= f.fields_for :order_details do |li| %>
-        <%= li.text_field :materials %>
-        <%= li.text_field  :qty  %>
-        <%= li.link_to_remove "Remove item" %>
-      <% end %>
-      <%= f.link_to_add "Add ingredient", :recipe_items %>
+      <%= builder.link_to_add "Add ingredient", :recipe_items, class: 'btn btn-success' %>
 
       <div class="form-group">
         <div class="col-md-8 col-md-offset-2">

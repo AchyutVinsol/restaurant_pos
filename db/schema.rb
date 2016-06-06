@@ -53,12 +53,13 @@ ActiveRecord::Schema.define(version: 20160603080041) do
   create_table "meals", force: :cascade do |t|
     t.string   "name",               limit: 255
     t.decimal  "price",                          precision: 8, scale: 2
+    t.boolean  "active",                                                 default: true
     t.string   "image_file_name",    limit: 255
     t.string   "image_content_type", limit: 255
     t.integer  "image_file_size",    limit: 4
     t.datetime "image_updated_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
+    t.datetime "created_at",                                                            null: false
+    t.datetime "updated_at",                                                            null: false
   end
 
   add_index "meals", ["name"], name: "index_meals_on_name", using: :btree

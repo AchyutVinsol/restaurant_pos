@@ -44,7 +44,7 @@ class Admin::RecipeItemsController < ApplicationController
 
     def set_recipe_item
       begin
-        @recipe_item = recipe_item.find(params[:id])
+        @recipe_item = RecipeItem.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         redirect_to admin_recipe_items_path, notice: "No recipe_item with id #{ params[:id] } found!"
         return
@@ -52,7 +52,7 @@ class Admin::RecipeItemsController < ApplicationController
     end
 
     def recipe_item_params
-      params.require(:recipe_item).permit(:ingredient_id, :meal_id)
+      params.require(:recipe_item).permit(:id, :ingredient_id, :meal_id, :quantity)
     end
 
 end

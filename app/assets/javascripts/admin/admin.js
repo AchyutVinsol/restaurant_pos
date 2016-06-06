@@ -11,7 +11,6 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery.ui
+//= require jquery-ui
 //= require jquery_ujs
 //= require bootstrap
-//= require jquery_nested_form

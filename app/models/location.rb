@@ -26,13 +26,28 @@ class Location < ActiveRecord::Base
 
   has_many :inventory_items, dependent: :destroy
   has_many :ingredients, through: :inventory_items
+  has_many :meals, -> { distinct }, through: :ingredients
 
   validates_with ShiftValidator
 
   after_create :create_inventory_items
   before_save :ensure_single_default
 
+  def available_meals
+    meals.select { |meal| (available?(meal) && meal.active) }
+  end
+
   private
+
+    def available?(meal)
+      meal.recipe_items.each do |recipe_item|
+        inventory_item = inventory_items.where(id: recipe_item.ingredient_id).take
+        if recipe_item.quantity < inventory_item.quantity
+          return true
+        end
+      end
+      return false
+    end
 
     def ensure_single_default
       if default_location

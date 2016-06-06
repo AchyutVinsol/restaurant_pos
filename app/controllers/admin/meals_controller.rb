@@ -1,5 +1,5 @@
 class Admin::MealsController < ApplicationController
-  before_action :set_meal, only: [:show, :edit, :update, :destroy]
+  before_action :set_meal, only: [:show, :edit, :update, :destroy, :change_status]
 
   def index
     @meals = Meal.all
@@ -15,7 +15,7 @@ class Admin::MealsController < ApplicationController
   def create
     @meal = Meal.new(meal_params)
     if @meal.save
-      redirect_to [:admin, @meal], notice: 'Successfully added a new locaton!'
+      redirect_to [:admin, @meal], notice: 'Successfully added a new meal!'
     else
       render :new
     end
@@ -40,11 +40,20 @@ class Admin::MealsController < ApplicationController
     end
   end
 
+  def change_status
+    # debugger
+    if @meal.change_status
+      render json: { status: 'success', active: @meal.active }
+    else
+      render json: { status: 'error', errors: @meal.errors.full_messages }
+    end
+  end
+
   private
 
     def set_meal
       begin
-        @meal = meal.find(params[:id])
+        @meal = Meal.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         redirect_to admin_meals_path, notice: "No meal with id #{ params[:id] } found!"
         return
@@ -52,7 +61,7 @@ class Admin::MealsController < ApplicationController
     end
 
     def meal_params
-      params.require(:meal).permit(:name, :image, :price, recipe_items_attributes: [:id, :ingredient_id, :meal_id, :_destroy])
+      params.require(:meal).permit(:name, :image, :active, :price, recipe_items_attributes: [:id, :ingredient_id, :meal_id, :quantity, :_destroy])
     end
 
 end

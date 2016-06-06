@@ -6,6 +6,7 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w( admin/inventory_items.js )
 Rails.application.config.assets.precompile += %w( admin/admin.css )
 Rails.application.config.assets.precompile += %w( admin/admin.js )
+Rails.application.config.assets.precompile += %w( admin/meals.js )
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 

@@ -3,6 +3,7 @@ class CreateMeals < ActiveRecord::Migration
     create_table :meals do |t|
       t.string :name, unique: true, index: true
       t.decimal :price, precision: 8, scale: 2
+      t.boolean :active, default: true
       t.attachment :image
       t.timestamps null: false
     end

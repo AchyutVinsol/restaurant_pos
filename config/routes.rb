@@ -21,9 +21,10 @@ Rails.application.routes.draw do
   namespace :admin do
 
     resources :locations do
+      resources :meals
       resources :inventory_items, only: [:index]
       resources :inventory_items, only: [], shallow: true  do
-        member do 
+        member do
           patch :increase_quantity
           patch :decrease_quantity
         end
@@ -35,6 +36,9 @@ Rails.application.routes.draw do
     end
 
     resources :meals do
+      member do
+        patch :change_status
+      end
       resources :recipe_items
     end
 
