@@ -40,9 +40,12 @@ class Location < ActiveRecord::Base
   private
 
     def available?(meal)
+      # debugger
       meal.recipe_items.each do |recipe_item|
+        # debugger
         inventory_item = inventory_items.where(id: recipe_item.ingredient_id).take
-        if recipe_item.quantity < inventory_item.quantity
+        if recipe_item.present? && recipe_item.quantity < inventory_item.quantity
+          # debugger
           return true
         end
       end

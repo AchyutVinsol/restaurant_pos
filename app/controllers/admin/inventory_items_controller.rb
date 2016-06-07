@@ -3,7 +3,9 @@ class Admin::InventoryItemsController  < Admin::BaseController
   before_action :set_resource, only: [:index]
 
   def index
-    @inventory_items = @resource.inventory_items
+    #FIXME_AB: Eagar load inventory items here?
+    @inventory_items = @resource.inventory_items.eager_load(:ingredient, :location)
+    InventoryItem.eager_load(:ingredient, :location)
   end
 
   def increase_quantity
@@ -27,10 +29,13 @@ class Admin::InventoryItemsController  < Admin::BaseController
     end
 
     def set_resource
+      #FIXME_AB: Eagar load inventory items here?
       if params[:location_id].present?
-        @resource = Location.find(params[:location_id])
+        @resource = Location.where(id: params[:location_id]).take
+        # @resource = Location.eager_load(:inventory_items).find(params[:location_id])
       else
-        @resource = Ingredient.find(params[:ingredient_id])
+        @resource = Ingredient.where(id: params[:ingredient_id]).take
+        # .eager_load(:inventory_items).find(params[:ingredient_id])
       end
     end
 

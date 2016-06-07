@@ -45,6 +45,8 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
       <ul class="nav navbar-nav navbar-right">
+        <li><%= 'Hello ' + current_user.first_name %></li>
+        <li><%= link_to('Logout', logout_path, method: :delete) %></li>
       </ul>
     </div>
   </div>

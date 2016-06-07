@@ -1,4 +1,4 @@
-class Admin::RecipeItemsController < ApplicationController
+class Admin::RecipeItemsController < Admin::BaseController
   before_action :set_recipe_item, only: [:show, :edit, :update, :destroy]
 
   def index

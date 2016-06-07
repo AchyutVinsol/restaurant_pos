@@ -3,7 +3,7 @@ class Admin::LocationsController < Admin::BaseController
   #FIXME_AB: DONE ensure single default
 
   def index
-    @locations = Location.all
+    @locations = Location.eager_load(:recipe_items).all
   end
 
   def show

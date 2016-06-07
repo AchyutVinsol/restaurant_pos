@@ -1,7 +1,7 @@
-class ShiftValidator < ActiveModel::Validator
+class PriceValidator < ActiveModel::Validator
   def validate(record)
-    if record.closing_time < MINIMUM_SHIFT_HOURS.hours.since(record.opening_time)
-      record.errors[:opening_time] << " should be earlier than closing time by #{ MINIMUM_SHIFT_HOURS } hours or more!"
+    if record.price < record.minimum_price
+      record.errors[:price] << " should be greater than cost of ingrdients #{ record.minimum_price }!"
     end
   end
 end

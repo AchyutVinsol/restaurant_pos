@@ -1,8 +1,8 @@
-class Admin::MealsController < ApplicationController
+class Admin::MealsController < Admin::BaseController
   before_action :set_meal, only: [:show, :edit, :update, :destroy, :change_status]
 
   def index
-    @meals = Meal.all
+    @meals = Meal.eager_load(:recipe_items).all
   end
 
   def show
