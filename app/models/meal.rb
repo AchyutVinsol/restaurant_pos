@@ -31,7 +31,9 @@ class Meal < ActiveRecord::Base
   has_many :ingredients, through: :recipe_items
   accepts_nested_attributes_for :recipe_items, allow_destroy: true
 
-  after_save :set_price
+  validates_with PriceValidator
+
+  # after_save :set_price
 
   def change_status
     if active
@@ -42,14 +44,13 @@ class Meal < ActiveRecord::Base
     save
   end
 
-  def set_price
-    # debugger
+  def minimum_price
     total = 0
     recipe_items.each do |recipe_item|
       price = Ingredient.where(id: recipe_item.ingredient_id).take.price
       total += (price * recipe_item.quantity)
     end
-    update_column(:price, total) 
+    return total
   end
 
 end
