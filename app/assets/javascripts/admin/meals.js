@@ -1,10 +1,6 @@
 $(document).ready(function() {
   $('[data-behaviour=change_meal_status]').on('ajax:success', function(event, data, status, xhr) {
-    console.log('Here');
-    console.log(data);
-    console.log(event.target);
     $button = $(event.target).find("button");
-    console.log($button);
     $status = $(event.target).closest('td').prev();
     if (data.status === "success") {
       if (data.active) {
@@ -22,7 +18,7 @@ $(document).ready(function() {
       $status.effect("highlight", {}, 1500);
     }
     else {
-      $modal = $tr.closest('table').siblings('div.modal');
+      $modal = $(event.target).closest('table').siblings('div.modal');
       $para = $modal.find('p[data-class=errorMessages]');
       $para.html(data.errors);
       $($modal).modal('show');

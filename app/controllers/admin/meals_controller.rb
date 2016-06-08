@@ -43,7 +43,7 @@ class Admin::MealsController < Admin::BaseController
 
   def change_status
     # debugger
-    if @meal.change_status
+    if @meal.toogle_status
       render json: { status: 'success', active: @meal.active }
     else
       render json: { status: 'error', errors: @meal.errors.full_messages }

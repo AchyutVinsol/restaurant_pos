@@ -2,7 +2,7 @@ class Admin::LocationsController < Admin::BaseController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
   def index
-    @locations = Location.eager_load(:meals).all
+    @locations = Location.includes(:meals).all
   end
 
   def show
