@@ -7,7 +7,6 @@ class Admin::MealsController < Admin::BaseController
 
   def show
     #FIXME_AB: DONE eagerload
-    @meal.includes(:recipe_items)
   end
 
   def new
@@ -55,7 +54,7 @@ class Admin::MealsController < Admin::BaseController
 
     def set_meal
       begin
-        @meal = Meal.find(params[:id])
+        @meal = Meal.includes(:recipe_items).find(params[:id])
       rescue ActiveRecord::RecordNotFound
         redirect_to admin_meals_path, notice: "No meal with id #{ params[:id] } found!"
         return

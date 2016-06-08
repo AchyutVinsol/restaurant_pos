@@ -36,40 +36,11 @@ class Location < ActiveRecord::Base
   before_save :ensure_single_default
 
   def available_meals
-    #FIXME_AB:  meals.active.select 
-    meals.active_meals.select { |meal| available?(meal) }
+    #FIXME_AB:  DONE meals.active.select
+    meals.active_meals.select { |meal| meal.quantity_available_by_location }
   end
 
   private
-
-    # def available?(meal)
-    #   debugger
-    #   # in i get all inventory_items, in a get recipe_items
-    #   inv = meals.inventory_items
-    #   rec = meals.recipe_items
-    #   p inv
-    #   p rec
-    #   meals.all?{ |meal| i[k] > a[k] }
-    # end
-
-    def available?(meal)
-      debugger
-      meal.ingredients.first.inventory_items.length
-      meal.ingredients.first.recipe_items.length
-      #FIXME_AB: optimize
-      meal.recipe_items.each do |recipe_item|
-        inventory_item = inventory_items.where(id: recipe_item.ingredient_id).take
-        if recipe_item.present? && recipe_item.quantity < inventory_item.quantity
-          # debugger
-          # return true
-        end
-      end
-      return false
-    end
-
-    def available?
-      
-    end
 
     def ensure_single_default
       if default_location
