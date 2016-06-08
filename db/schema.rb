@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160603080041) do
+ActiveRecord::Schema.define(version: 20160608115457) do
 
   create_table "ingredients", force: :cascade do |t|
     t.string   "name",              limit: 255
@@ -89,6 +89,7 @@ ActiveRecord::Schema.define(version: 20160603080041) do
     t.string   "remember_me_token",               limit: 255
     t.datetime "created_at",                                                  null: false
     t.datetime "updated_at",                                                  null: false
+    t.string   "prefered_location",               limit: 255
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
