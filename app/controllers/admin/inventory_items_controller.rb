@@ -1,9 +1,10 @@
 class Admin::InventoryItemsController  < Admin::BaseController
   before_action :set_inventory_item, only: [:show, :increase_quantity, :decrease_quantity]
   before_action :set_resource, only: [:index]
+#FIXME_AB: DONE don't use eagerload everywhere use includes
 
   def index
-    @inventory_items = @resource.inventory_items
+    @inventory_items = @resource.inventory_items.includes(:ingredient, :location)
   end
 
   def increase_quantity
@@ -28,9 +29,9 @@ class Admin::InventoryItemsController  < Admin::BaseController
 
     def set_resource
       if params[:location_id].present?
-        @resource = Location.find(params[:location_id])
+        @resource = Location.where(id: params[:location_id]).take
       else
-        @resource = Ingredient.find(params[:ingredient_id])
+        @resource = Ingredient.where(id: params[:ingredient_id]).take
       end
     end
 

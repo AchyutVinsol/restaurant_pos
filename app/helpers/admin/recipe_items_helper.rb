@@ -1,0 +1,2 @@
+module Admin::RecipeItemsHelper
+end

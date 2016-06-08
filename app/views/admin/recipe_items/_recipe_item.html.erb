@@ -1,0 +1,12 @@
+<% recipe_item ||= @recipe_item %>
+<tr>
+  <td><%= recipe_item.id %></td>
+  <td><%= Ingredient.where(id: recipe_item.ingredient_id).take.name %></td>
+  <td><%= Meal.where(id: recipe_item.meal_id).take.name %></td>
+  <td><%= recipe_item.quantity %></td>
+  <td>
+    <div class="btn-group">
+    </div>
+  </td>
+  </br>
+</tr>

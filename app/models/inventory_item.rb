@@ -23,8 +23,10 @@
 class InventoryItem < ActiveRecord::Base
   belongs_to :ingredient
   belongs_to :location
+  has_many :reccipe_items, through: :ingredient
 
-  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, uniqueness: { scope: [:location_id, :ingredient_id] }
+  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 },
+    uniqueness: { scope: [:location_id, :ingredient_id] }
 
   def increase_quantity(value)
     self.quantity += value

@@ -1,0 +1,34 @@
+<div class="well well-sm">
+  <%= nested_form_for([:admin, @meal], html: {class: 'form-horizontal'}) do |builder| %>
+    <%= render partial: 'shared/errors', locals: { object: @meal } %>
+    <fieldset>
+      <legend>Enter Meal Details</legend>
+      <div class="form-group">
+        <%= builder.label :name, "Name*:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= builder.text_field :name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= builder.label :image, "Image*:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= builder.file_field :image %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= builder.label :price, "Price*:", class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= builder.number_field :price, class: "form-control", step: "0.01" %>
+        </div>
+      </div>
+      <%= render partial: 'admin/recipe_items/form', locals: { object: builder } %>
+      <%= builder.link_to_add "Add ingredient", :recipe_items, class: 'btn btn-success' %>
+
+      <div class="form-group">
+        <div class="col-md-8 col-md-offset-2">
+          <%= builder.submit "Submit", class: "btn btn-default btn-primary" %>
+        </div>
+      </div>
+    </fieldset>
+  <% end %>
+</div>

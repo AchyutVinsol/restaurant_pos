@@ -1,0 +1,12 @@
+<%= object.fields_for :recipe_items do |li| %>
+  <fieldset>
+    <legend>Enter Ingredient Details</legend>
+      <%= li.label :ingredient_id, "Ingredient:" %>
+      <%= li.select :ingredient_id, Ingredient.all.map { |x| [x.name, x.id] } %>
+      <%= li.label :quantity, "Quantity:" %>
+      <%= li.number_field :quantity %>
+    <div class="btn-group pull-right">
+      <%= li.link_to_remove "Remove ingredient", class: 'btn btn-danger' %>
+    </div>
+  </fieldset>
+<% end %>

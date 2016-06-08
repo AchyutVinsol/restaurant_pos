@@ -1,0 +1,30 @@
+<% meal ||= @meal %>
+<tr>
+  <td><%= meal.id %></td>
+  <td><%= meal.name %></td>
+  <td><%= meal.price %></td>
+  <td><%= image_tag meal.image.url(:thumb) %></td>
+  <td>
+    <% if meal.active %>
+      <%= @status = 'Selling' %>
+    <% else %>
+      <%= @status = 'Not Selling' %>
+    <% end %>
+  </td>
+  <td>
+    <%= form_for(meal, url: change_status_admin_meal_path(meal), html: {class: 'form-horizontal', :"data-behaviour" => 'change_meal_status'}, method: :patch, remote: true, format: :json ) do |f| %>
+      <% if meal.active %>
+        <%= f.button :'Not Selling', class: "btn btn-default btn-danger" %>
+      <% else %>
+        <%= f.button :'Selling', class: "btn btn-default btn-success" %>
+      <% end %>
+    <% end %>
+  </td>
+  <td>
+    <div class="btn-group">
+      <%= link_to 'Show', admin_meal_path(meal), class: 'btn btn-info' %>
+      <%= link_to 'Edit', edit_admin_meal_path(meal), class: 'btn btn-warning' %>
+      <%= link_to 'Destroy', admin_meal_path(meal), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+    </div>
+  </td>
+</tr>
