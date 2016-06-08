@@ -1,9 +1,8 @@
 class Admin::LocationsController < Admin::BaseController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
-  #FIXME_AB: DONE ensure single default
 
   def index
-    @locations = Location.eager_load(:recipe_items).all
+    @locations = Location.eager_load(:meals).all
   end
 
   def show

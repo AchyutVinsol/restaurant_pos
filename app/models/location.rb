@@ -30,39 +30,56 @@ class Location < ActiveRecord::Base
 
   validates_with ShiftValidator
 
+  scope :default, -> { where(default_location: true).take }
+
   after_create :create_inventory_items
   before_save :ensure_single_default
 
   def available_meals
-    meals.select { |meal| (available?(meal) && meal.active) }
+    #FIXME_AB:  meals.active.select 
+    meals.active_meals.select { |meal| available?(meal) }
   end
 
   private
 
+    # def available?(meal)
+    #   debugger
+    #   # in i get all inventory_items, in a get recipe_items
+    #   inv = meals.inventory_items
+    #   rec = meals.recipe_items
+    #   p inv
+    #   p rec
+    #   meals.all?{ |meal| i[k] > a[k] }
+    # end
+
     def available?(meal)
-      # debugger
+      debugger
+      meal.ingredients.first.inventory_items.length
+      meal.ingredients.first.recipe_items.length
+      #FIXME_AB: optimize
       meal.recipe_items.each do |recipe_item|
-        # debugger
         inventory_item = inventory_items.where(id: recipe_item.ingredient_id).take
         if recipe_item.present? && recipe_item.quantity < inventory_item.quantity
           # debugger
-          return true
+          # return true
         end
       end
       return false
     end
 
+    def available?
+      
+    end
+
     def ensure_single_default
       if default_location
         begin
-          current_default = Location.where(default_location: true).take
-          if current_default
+          if Location.default
             current_default.default_location = false
             current_default.save
           end
         rescue ActiveRecord::RecordNotFound
-          #do nothing?
-          return
+          return false
         end
       end
     end

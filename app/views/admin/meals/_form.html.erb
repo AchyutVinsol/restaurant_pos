@@ -4,19 +4,19 @@
     <fieldset>
       <legend>Enter Meal Details</legend>
       <div class="form-group">
-        <%= builder.label :name, "Name:", class: "col-md-2 control-label" %>
+        <%= builder.label :name, "Name*:", class: "col-md-2 control-label" %>
         <div class="col-md-8">
           <%= builder.text_field :name, class: "form-control" %>
         </div>
       </div>
       <div class="form-group">
-        <%= builder.label :image, "Image:", class: "col-md-2 control-label" %>
+        <%= builder.label :image, "Image*:", class: "col-md-2 control-label" %>
         <div class="col-md-8">
           <%= builder.file_field :image %>
         </div>
       </div>
       <div class="form-group">
-        <%= builder.label :price, "Price:", class: "col-md-2 control-label" %>
+        <%= builder.label :price, "Price*:", class: "col-md-2 control-label" %>
         <div class="col-md-8">
           <%= builder.number_field :price, class: "form-control", step: "0.01" %>
         </div>

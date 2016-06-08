@@ -33,24 +33,27 @@ class Meal < ActiveRecord::Base
 
   validates_with PriceValidator
 
-  # after_save :set_price
+  scope :active_meals, -> { where(active: true) }
 
-  def change_status
+  def toogle_status
     if active
-      self.active = false
+      deactivate
     else
-      self.active = true
+      activate
     end
+  end
+
+  def activate
+    self.active = true
+    save
+  end
+
+  def deactivate
+    self.active = false
     save
   end
 
   def minimum_price
-    total = 0
-    recipe_items.each do |recipe_item|
-      price = Ingredient.where(id: recipe_item.ingredient_id).take.price
-      total += (price * recipe_item.quantity)
-    end
-    return total
+    recipe_items.inject(0){ |sum, recipe| sum + (recipe.quantity * recipe.ingredient.price) }.to_f
   end
-
 end

@@ -2,10 +2,12 @@ class Admin::MealsController < Admin::BaseController
   before_action :set_meal, only: [:show, :edit, :update, :destroy, :change_status]
 
   def index
-    @meals = Meal.eager_load(:recipe_items).all
+    @meals = Meal.includes(:recipe_items).all
   end
 
   def show
+    #FIXME_AB: DONE eagerload
+    @meal.includes(:recipe_items)
   end
 
   def new

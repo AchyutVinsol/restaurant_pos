@@ -1,11 +1,10 @@
 class Admin::InventoryItemsController  < Admin::BaseController
   before_action :set_inventory_item, only: [:show, :increase_quantity, :decrease_quantity]
   before_action :set_resource, only: [:index]
+#FIXME_AB: DONE don't use eagerload everywhere use includes
 
   def index
-    #FIXME_AB: Eagar load inventory items here?
-    @inventory_items = @resource.inventory_items.eager_load(:ingredient, :location)
-    InventoryItem.eager_load(:ingredient, :location)
+    @inventory_items = @resource.inventory_items.includes(:ingredient, :location)
   end
 
   def increase_quantity
@@ -29,13 +28,10 @@ class Admin::InventoryItemsController  < Admin::BaseController
     end
 
     def set_resource
-      #FIXME_AB: Eagar load inventory items here?
       if params[:location_id].present?
         @resource = Location.where(id: params[:location_id]).take
-        # @resource = Location.eager_load(:inventory_items).find(params[:location_id])
       else
         @resource = Ingredient.where(id: params[:ingredient_id]).take
-        # .eager_load(:inventory_items).find(params[:ingredient_id])
       end
     end
 

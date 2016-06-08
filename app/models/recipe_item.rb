@@ -23,4 +23,5 @@
 class RecipeItem < ActiveRecord::Base
   belongs_to :ingredient
   belongs_to :meal
+  has_many :inventory_items, through: :ingredient
 end
