@@ -1,7 +1,6 @@
 class Admin::InventoryItemsController  < Admin::BaseController
   before_action :set_inventory_item, only: [:show, :increase_quantity, :decrease_quantity]
   before_action :set_resource, only: [:index]
-#FIXME_AB: DONE don't use eagerload everywhere use includes
 
   def index
     @inventory_items = @resource.inventory_items.includes(:ingredient, :location)

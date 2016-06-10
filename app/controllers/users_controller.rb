@@ -1,6 +1,16 @@
 class UsersController < ApplicationController
   before_action :ensure_anonymous, only: [:new, :create]
 
+  def change_prefered_location
+    # debugger
+    if params[:location_id].present?
+      # @location = Location.includes(:meals).where(id: params[:location_id]).take
+      current_user.set_prefered_location(params[:location_id])
+      # set_prefered_location(@location.id)
+      redirect_to locations_path
+    end
+  end
+
   # GET /users/new
   def new
     @user = User.new
@@ -33,7 +43,6 @@ class UsersController < ApplicationController
 
   private
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
     end

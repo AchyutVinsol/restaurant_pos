@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
 
-  #FIXME_AB: DONE make an admin route /admin
-  root 'pages#show', as: 'home', via: :all, page: "home"
+  root 'locations#index', as: 'home', via: :all
 
   get "admin", to: "admin/locations#index"
 
@@ -17,6 +16,11 @@ Rails.application.routes.draw do
     post 'login' => :create
     delete 'logout' => :destroy
   end
+
+  resources :locations do
+    resources :meals, only: [:show]
+  end
+  resources :carts, only: [:show, :create]
 
   namespace :admin do
 
@@ -44,7 +48,11 @@ Rails.application.routes.draw do
 
   end
 
-  resources :users, only: [:create, :new]
+  resources :users, only: [:create, :new] do
+    member do
+      post :change_prefered_location
+    end
+  end
 
 
   # get "sessions/destroy"

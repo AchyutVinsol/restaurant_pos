@@ -15,6 +15,3 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require jquery_nested_form
-
-
-// FIXME_AB: DONE Remove unused js css files

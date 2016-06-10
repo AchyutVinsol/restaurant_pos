@@ -6,7 +6,6 @@ class Admin::MealsController < Admin::BaseController
   end
 
   def show
-    #FIXME_AB: DONE eagerload
   end
 
   def new

@@ -1,0 +1,69 @@
+<% #FIXME_DONE: restructure the show page -%>
+<% #FIXME_DONE: display which ingridients can be requested extra and at what cost -%>
+<% @meal ||= meal %>
+<div class = "row">
+  <div class='col-md-12'>
+    <h4>
+      <%= "Meal: #{ @meal.name }" %>
+    </h4>
+    <h4>
+      <%= "Price: #{ number_to_currency(@meal.price) }" %>
+    </h4>
+    <h4>
+      <%= "Description: #{ @meal.description }" %>
+    </h4>
+    <% if @meal.veg? %>
+      <h4><span class="label label-success">Vegetarian</span></h4>
+    <% else %>
+      <h4><span class="label label-warning">Non-Vegetarian</span></h4>
+    <% end %>
+    <h4>Listing recipe_items</h4>
+    <%= form_tag(locations_path, method: "get", html: { class: 'form pull-right' } ) do %>
+      <div class='col-md-5'>
+        <fieldset>
+          <table class="table table-striped table-hover" >
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Ingredient</th>
+                <th>Quantity</th>
+                <th>Request Extra?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @meal.recipe_items.each do |recipe_item| %>
+                <tr>
+                  <td><%= recipe_item.id %></td>
+                  <td><%= recipe_item.ingredient.name %></td>
+                  <td><%= recipe_item.quantity %></td>
+                  <% if recipe_item.ingredient.can_request_extra %>
+                    <td>
+                      <div class="form-group">
+                        <div class="col-md-8">
+                          <%= check_box_tag :can_request_extra, class: "form-control" %>
+                        </div>
+                      </div>
+                    </td>
+                  <% end %>
+                  <% #FIXME_DONE: don't use model directly in views. use associations. -%>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="form-group">
+            <%= label_tag :quantity, "Select Meal quantity:", class: "col-md-4 control-label" %>
+            <div class="col-md-8">
+              <%= select_tag :quantity, options_for_select(1..@meal.quantity_available_by_location(@location)), class: "form-control" %>
+            </div>
+          </div>
+          <div class="form-group pull-left">
+            <div class="col-md-8 col-md-offset-2">
+              <%= submit_tag "Add to Cart", class: "btn btn-default btn-primary" %>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    <% end %>
+    </br>
+  </div>
+</div>

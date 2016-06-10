@@ -16,11 +16,13 @@
 #  remember_me_token               :string(255)
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
+#  prefered_location_id            :integer
 #
 # Indexes
 #
 #  index_users_on_email                  (email)
 #  index_users_on_forgot_password_token  (forgot_password_token)
+#  index_users_on_prefered_location_id   (prefered_location_id)
 #  index_users_on_remember_me_token      (remember_me_token)
 #  index_users_on_verification_token     (verification_token)
 #
@@ -94,6 +96,11 @@ class User < ActiveRecord::Base
 
   def clear_remember_me_token!
     self.remember_me_token = nil
+    save!
+  end
+
+  def set_prefered_location(location_id)
+    self.prefered_location_id = location_id
     save!
   end
 

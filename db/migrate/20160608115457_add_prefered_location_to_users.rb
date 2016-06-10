@@ -1,5 +1,7 @@
 class AddPreferedLocationToUsers < ActiveRecord::Migration
   def change
-    add_column(:users, :prefered_location, :string, index: true)
+    change_table :users do |t|
+      t.references :prefered_location, index: true, default: nil
+    end
   end
 end

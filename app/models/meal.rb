@@ -33,7 +33,10 @@ class Meal < ActiveRecord::Base
 
   validates_with PriceValidator
 
-  scope :active_meals, -> { where(active: true) }
+  #FIXME_DONE: rename this scope as :active
+  scope :active, -> { where(active: true) }
+  # scope :non_veg, -> { where(veg: false) }
+  # scope :veg, -> { where(veg: true) }
 
   # def availability_by_location(location)
   #   ris = recipe_items
@@ -43,8 +46,8 @@ class Meal < ActiveRecord::Base
 
   def quantity_available_by_location(location)
     ris = recipe_items
-    iis = InventoryItem.where(ingredient_id: ris.map(&:ingredient_id)).where(location_id: location.id)
-    ris.map{ |ri| iis.first{|ii| ii.ingredient_id == ri.ingredient_id}.quantity / ri.quantity }.min
+    iis = location.inventory_items.where(ingredient_id: ris.map(&:ingredient_id))
+    ris.map{ |ri| iis.first{ |ii| ii.ingredient_id == ri.ingredient_id}.quantity / ri.quantity }.min
   end
 
   def availability_by_location(location)
@@ -67,6 +70,10 @@ class Meal < ActiveRecord::Base
   def deactivate
     self.active = false
     save
+  end
+
+  def veg?
+    ingredients.all? { |ingredient| ingredient.veg }
   end
 
   def minimum_price

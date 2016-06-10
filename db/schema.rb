@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160608115457) do
+ActiveRecord::Schema.define(version: 20160610113712) do
 
   create_table "ingredients", force: :cascade do |t|
     t.string   "name",              limit: 255
@@ -52,14 +52,15 @@ ActiveRecord::Schema.define(version: 20160608115457) do
 
   create_table "meals", force: :cascade do |t|
     t.string   "name",               limit: 255
-    t.decimal  "price",                          precision: 8, scale: 2
-    t.boolean  "active",                                                 default: true
+    t.decimal  "price",                            precision: 8, scale: 2
+    t.boolean  "active",                                                   default: true
     t.string   "image_file_name",    limit: 255
     t.string   "image_content_type", limit: 255
     t.integer  "image_file_size",    limit: 4
     t.datetime "image_updated_at"
-    t.datetime "created_at",                                                            null: false
-    t.datetime "updated_at",                                                            null: false
+    t.datetime "created_at",                                                              null: false
+    t.datetime "updated_at",                                                              null: false
+    t.text     "description",        limit: 65535
   end
 
   add_index "meals", ["name"], name: "index_meals_on_name", using: :btree
@@ -89,11 +90,12 @@ ActiveRecord::Schema.define(version: 20160608115457) do
     t.string   "remember_me_token",               limit: 255
     t.datetime "created_at",                                                  null: false
     t.datetime "updated_at",                                                  null: false
-    t.string   "prefered_location",               limit: 255
+    t.integer  "prefered_location_id",            limit: 4
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["forgot_password_token"], name: "index_users_on_forgot_password_token", using: :btree
+  add_index "users", ["prefered_location_id"], name: "index_users_on_prefered_location_id", using: :btree
   add_index "users", ["remember_me_token"], name: "index_users_on_remember_me_token", using: :btree
   add_index "users", ["verification_token"], name: "index_users_on_verification_token", using: :btree
 

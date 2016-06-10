@@ -2,9 +2,17 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user, :signed_in?
+  helper_method :current_user, :signed_in?, :current_location, :get_meal_type_filter
 
   protected
+
+    def current_location
+      if current_user
+        Location.includes(:meals).where(id: current_user.prefered_location_id).take || Location.default
+      else
+        Location.default
+      end
+    end
 
     def ensure_logged_in
       if !current_user
@@ -35,6 +43,14 @@ class ApplicationController < ActionController::Base
         user.genrate_remember_me_token!
         cookies.permanent[:remember_me_token] = user.remember_me_token
       end
+    end
+
+    def set_meal_type_filter(meal_type)
+      session[:meal_type_filter] = meal_type
+    end
+
+    def get_meal_type_filter
+      session[:meal_type_filter] || 'All'
     end
 
     def ensure_anonymous
