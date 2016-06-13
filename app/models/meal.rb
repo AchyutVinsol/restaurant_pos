@@ -12,6 +12,7 @@
 #  image_updated_at   :datetime
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  description        :text(65535)
 #
 # Indexes
 #
@@ -30,10 +31,12 @@ class Meal < ActiveRecord::Base
   has_many :recipe_items, dependent: :destroy
   has_many :ingredients, through: :recipe_items
   accepts_nested_attributes_for :recipe_items, allow_destroy: true
+  has_many :line_items
 
   validates_with PriceValidator
 
   #FIXME_DONE: rename this scope as :active
+
   scope :active, -> { where(active: true) }
   # scope :non_veg, -> { where(veg: false) }
   # scope :veg, -> { where(veg: true) }

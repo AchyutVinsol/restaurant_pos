@@ -36,7 +36,7 @@ class Location < ActiveRecord::Base
   before_save :ensure_single_default
 
   def available_meals
-    meals.active_meals.includes(:recipe_items).select { |meal| meal.quantity_available_by_location(self) }
+    meals.active.includes(:recipe_items).select { |meal| meal.quantity_available_by_location(self) }
   end
 
   private

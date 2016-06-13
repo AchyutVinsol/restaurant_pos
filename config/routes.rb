@@ -49,11 +49,13 @@ Rails.application.routes.draw do
   end
 
   resources :users, only: [:create, :new] do
+    resources :orders, only: [:delete, :show, :index] do
+      resources :line_items, only: [:create, :delete, :show, :index]
+    end
     member do
       post :change_prefered_location
     end
   end
-
 
   # get "sessions/destroy"
   # get "sessions/create"

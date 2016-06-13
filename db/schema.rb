@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160610113712) do
+ActiveRecord::Schema.define(version: 20160613111735) do
+
+  create_table "extra_items", force: :cascade do |t|
+    t.integer  "line_item_id",  limit: 4
+    t.integer  "ingredient_id", limit: 4
+    t.decimal  "price",                   precision: 8, scale: 2
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+  end
+
+  add_index "extra_items", ["ingredient_id"], name: "index_extra_items_on_ingredient_id", using: :btree
+  add_index "extra_items", ["line_item_id"], name: "index_extra_items_on_line_item_id", using: :btree
 
   create_table "ingredients", force: :cascade do |t|
     t.string   "name",              limit: 255
@@ -34,6 +45,18 @@ ActiveRecord::Schema.define(version: 20160610113712) do
 
   add_index "inventory_items", ["ingredient_id"], name: "index_inventory_items_on_ingredient_id", using: :btree
   add_index "inventory_items", ["location_id"], name: "index_inventory_items_on_location_id", using: :btree
+
+  create_table "line_items", force: :cascade do |t|
+    t.decimal  "price",                precision: 8,  scale: 2
+    t.integer  "meal_id",    limit: 4
+    t.integer  "order_id",   limit: 4
+    t.decimal  "quantity",             precision: 10
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+  end
+
+  add_index "line_items", ["meal_id"], name: "index_line_items_on_meal_id", using: :btree
+  add_index "line_items", ["order_id"], name: "index_line_items_on_order_id", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.string   "name",             limit: 255
@@ -64,6 +87,16 @@ ActiveRecord::Schema.define(version: 20160610113712) do
   end
 
   add_index "meals", ["name"], name: "index_meals_on_name", using: :btree
+
+  create_table "orders", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "status",     limit: 4,                         default: 0
+    t.decimal  "price",                precision: 8, scale: 2
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
+  end
+
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "recipe_items", force: :cascade do |t|
     t.integer  "ingredient_id", limit: 4
@@ -99,8 +132,13 @@ ActiveRecord::Schema.define(version: 20160610113712) do
   add_index "users", ["remember_me_token"], name: "index_users_on_remember_me_token", using: :btree
   add_index "users", ["verification_token"], name: "index_users_on_verification_token", using: :btree
 
+  add_foreign_key "extra_items", "ingredients"
+  add_foreign_key "extra_items", "line_items"
   add_foreign_key "inventory_items", "ingredients"
   add_foreign_key "inventory_items", "locations"
+  add_foreign_key "line_items", "meals"
+  add_foreign_key "line_items", "orders"
+  add_foreign_key "orders", "users"
   add_foreign_key "recipe_items", "ingredients"
   add_foreign_key "recipe_items", "meals"
 end

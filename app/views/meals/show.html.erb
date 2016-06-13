@@ -1,5 +1,5 @@
-<% #FIXME_DONE: restructure the show page -%>
 <% #FIXME_DONE: display which ingridients can be requested extra and at what cost -%>
+<% #FIXME_DONE: restructure the show page -%>
 <% @meal ||= meal %>
 <div class = "row">
   <div class='col-md-12'>
@@ -17,8 +17,9 @@
     <% else %>
       <h4><span class="label label-warning">Non-Vegetarian</span></h4>
     <% end %>
+    <% @order = current_order %>
     <h4>Listing recipe_items</h4>
-    <%= form_tag(locations_path, method: "get", html: { class: 'form pull-right' } ) do %>
+    <%= form_tag(user_order_line_items_path(current_user, @order), html: { class: 'form pull-right' } ) do %>
       <div class='col-md-5'>
         <fieldset>
           <table class="table table-striped table-hover" >
@@ -31,6 +32,8 @@
               </tr>
             </thead>
             <tbody>
+              <%= hidden_field_tag :meal_id, @meal.id %>
+              <% @extra_ingredients = [] %>
               <% @meal.recipe_items.each do |recipe_item| %>
                 <tr>
                   <td><%= recipe_item.id %></td>
@@ -40,7 +43,9 @@
                     <td>
                       <div class="form-group">
                         <div class="col-md-8">
-                          <%= check_box_tag :can_request_extra, class: "form-control" %>
+                          <% @extra_ingredients << recipe_item.ingredient.id %>
+                          <%= check_box_tag :can_request_extra, @extra_ingredients %>
+                          <%= " for a price of #{recipe_item.ingredient.price}" %>
                         </div>
                       </div>
                     </td>

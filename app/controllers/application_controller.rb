@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user, :signed_in?, :current_location, :get_meal_type_filter
+  helper_method :current_user, :signed_in?, :current_location, :get_meal_type_filter, :current_order
 
   protected
 
@@ -14,14 +14,18 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    def ensure_logged_in
-      if !current_user
-        redirect_to(home_url, notice: 'You are not logged in!')
-      end
+    def current_order
+      @order || current_user.orders.where(status: 'pending').take || Order.new(user_id: current_user.id).save
     end
 
     def current_user
       @current_user ||= find_user_by_session_or_cookie
+    end
+
+    def ensure_logged_in
+      if !current_user
+        redirect_to(home_url, notice: 'You are not logged in!')
+      end
     end
 
     def find_user_by_session_or_cookie
