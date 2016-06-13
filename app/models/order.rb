@@ -20,6 +20,8 @@
 
 class Order < ActiveRecord::Base
   belongs_to :user
+
+  #FIXME_AB: dependent?
   has_many :line_items
   has_many :meals, through: :line_items
 
@@ -29,6 +31,7 @@ class Order < ActiveRecord::Base
 
   private
 
+  #FIXME_AB: not needed
     def set_price
       self.price = meals.inject(0){|sum ,meal| sum += meal.price }
     end

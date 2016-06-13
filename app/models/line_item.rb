@@ -25,4 +25,5 @@ class LineItem < ActiveRecord::Base
   belongs_to :meal
   belongs_to :order
   has_many :extra_items
+  accepts_nested_attributes_for :extra_items
 end

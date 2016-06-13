@@ -18,9 +18,20 @@ Rails.application.routes.draw do
   end
 
   resources :locations do
+    member do
+      post :change
+    end
     resources :meals, only: [:show]
   end
-  resources :carts, only: [:show, :create]
+
+  resources :users, only: [:create, :new] do
+    resources :orders, only: [:delete, :show, :index] do
+      resources :line_items, only: [:create, :delete, :show, :index]
+    end
+  end
+  
+
+
 
   namespace :admin do
 
@@ -48,14 +59,6 @@ Rails.application.routes.draw do
 
   end
 
-  resources :users, only: [:create, :new] do
-    resources :orders, only: [:delete, :show, :index] do
-      resources :line_items, only: [:create, :delete, :show, :index]
-    end
-    member do
-      post :change_prefered_location
-    end
-  end
 
   # get "sessions/destroy"
   # get "sessions/create"

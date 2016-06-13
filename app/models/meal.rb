@@ -35,7 +35,6 @@ class Meal < ActiveRecord::Base
 
   validates_with PriceValidator
 
-  #FIXME_DONE: rename this scope as :active
 
   scope :active, -> { where(active: true) }
   # scope :non_veg, -> { where(veg: false) }

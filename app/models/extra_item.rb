@@ -24,4 +24,6 @@ class ExtraItem < ActiveRecord::Base
 
   belongs_to :line_items
 
+  #FIXME_AB: before save set price from ingredients
+
 end

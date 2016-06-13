@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
     def current_location
       if current_user
         Location.includes(:meals).where(id: current_user.prefered_location_id).take || Location.default
+      elsif session[:location]
+        Location.find_by(id: session[:location])
       else
         Location.default
       end
