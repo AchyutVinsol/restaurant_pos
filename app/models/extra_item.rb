@@ -23,7 +23,15 @@
 class ExtraItem < ActiveRecord::Base
 
   belongs_to :line_items
+  belongs_to :ingredient
 
-  #FIXME_AB: before save set price from ingredients
+  before_save :set_price
+  #FIXME_DONE: before save set price from ingredients
+
+  private
+
+    def set_price
+      self.price = ingredient.price
+    end
 
 end

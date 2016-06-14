@@ -1,0 +1,5 @@
+<%= @order.status %>
+<%= number_to_currency(@order.price) %>
+<% @order.line_items.each do |line_item| %>
+  <%= render line_item %>
+<% end %>

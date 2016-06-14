@@ -1,0 +1,2 @@
+class ExtraItemController < ApplicationController
+end

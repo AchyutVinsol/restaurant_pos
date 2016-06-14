@@ -1,6 +1,9 @@
 class OrdersController < ApplicationController
 
   def show
+    @order = current_order
+    @line_items = @order.line_items
+    # @extra_items = @line_item.extra_items
   end
 
   def create

@@ -21,19 +21,24 @@
 class Order < ActiveRecord::Base
   belongs_to :user
 
-  #FIXME_AB: dependent?
-  has_many :line_items
+  #FIXME_DONE: dependent?
+  has_many :line_items, dependent: :destroy
   has_many :meals, through: :line_items
 
-  before_validation :set_price# also on adding a line item
+  before_save :set_price
 
   enum status: [ :pending, :placed, :paid, :delivered ]
 
   private
 
-  #FIXME_AB: not needed
+  #FIXME_DONE: needed set_price for order before save
     def set_price
-      self.price = meals.inject(0){|sum ,meal| sum += meal.price }
+      total = 0
+      line_items.each do |line_item|
+        total_extra = line_item.extra_items.inject(0) { |sum, extra_item| sum + extra_item.price }
+        total += ((line_item.price + total_extra) * line_item.quantity)
+      end
+      self.price = total
     end
 
 end

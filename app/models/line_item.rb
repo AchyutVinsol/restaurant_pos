@@ -22,8 +22,16 @@
 #
 
 class LineItem < ActiveRecord::Base
+  before_save :set_price
+
   belongs_to :meal
   belongs_to :order
-  has_many :extra_items
+  has_many :extra_items, dependent: :destroy
   accepts_nested_attributes_for :extra_items
+
+  private
+
+    def set_price
+      self.price = meal.price
+    end
 end
