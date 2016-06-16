@@ -89,13 +89,19 @@ ActiveRecord::Schema.define(version: 20160613111735) do
   add_index "meals", ["name"], name: "index_meals_on_name", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.integer  "status",     limit: 4,                         default: 0
-    t.decimal  "price",                precision: 8, scale: 2
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
+    t.integer  "user_id",        limit: 4
+    t.integer  "location_id",    limit: 4
+    t.datetime "expiry_at"
+    t.datetime "placed_at"
+    t.datetime "pickup_time"
+    t.integer  "status",         limit: 4,                         default: 0
+    t.integer  "contact_number", limit: 4,                         default: 99999
+    t.decimal  "price",                    precision: 8, scale: 2
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
   end
 
+  add_index "orders", ["location_id"], name: "index_orders_on_location_id", using: :btree
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "recipe_items", force: :cascade do |t|
@@ -138,6 +144,7 @@ ActiveRecord::Schema.define(version: 20160613111735) do
   add_foreign_key "inventory_items", "locations"
   add_foreign_key "line_items", "meals"
   add_foreign_key "line_items", "orders"
+  add_foreign_key "orders", "locations"
   add_foreign_key "orders", "users"
   add_foreign_key "recipe_items", "ingredients"
   add_foreign_key "recipe_items", "meals"

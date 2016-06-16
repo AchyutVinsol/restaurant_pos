@@ -11,4 +11,11 @@ class UserNotifier < ApplicationMailer
     @user = user
     mail to: user.email, subject: 'Password reset mail from ResPOS, kindly reset your password!'
   end
+
+  def order_placed_email(user, order)
+    @user = user
+    @order = Order.first
+    mail to: user.email, subject: 'You have plced an order!'
+  end
+
 end

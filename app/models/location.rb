@@ -25,6 +25,7 @@ class Location < ActiveRecord::Base
   validates :state, :city, :opening_time, :closing_time, presence: true
 
   has_many :inventory_items, dependent: :destroy
+  has_many :orders#, dependent: :destroy
   has_many :ingredients, through: :inventory_items
   has_many :meals, -> { distinct }, through: :ingredients
 

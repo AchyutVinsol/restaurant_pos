@@ -37,14 +37,6 @@ class Meal < ActiveRecord::Base
 
 
   scope :active, -> { where(active: true) }
-  # scope :non_veg, -> { where(veg: false) }
-  # scope :veg, -> { where(veg: true) }
-
-  # def availability_by_location(location)
-  #   ris = recipe_items
-  #   iis = InventoryItem.where(ingredient_id: ris.map(&:ingredient_id)).where(location_id: 8)
-  #   ris.all?{ |ri| ri.quantity < iis.first{|ii| ii.ingredient_id == ri.ingredient_id}.quantity }
-  # end
 
   def quantity_available_by_location(location)
     ris = recipe_items

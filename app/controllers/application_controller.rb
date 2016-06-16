@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     end
 
     def current_order
-      @order || current_user.orders.where(status: 'pending').take || Order.new(user_id: current_user.id).save
+      @order || current_user.orders.pending.take || Order.new(user_id: current_user.id, location_id: current_location.id).save
     end
 
     def current_user

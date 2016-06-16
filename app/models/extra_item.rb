@@ -26,7 +26,6 @@ class ExtraItem < ActiveRecord::Base
   belongs_to :ingredient
 
   before_save :set_price
-  #FIXME_DONE: before save set price from ingredients
 
   private
 
