@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160613111735) do
+ActiveRecord::Schema.define(version: 20160617080559) do
 
   create_table "extra_items", force: :cascade do |t|
     t.integer  "line_item_id",  limit: 4
@@ -115,6 +115,18 @@ ActiveRecord::Schema.define(version: 20160613111735) do
   add_index "recipe_items", ["ingredient_id"], name: "index_recipe_items_on_ingredient_id", using: :btree
   add_index "recipe_items", ["meal_id"], name: "index_recipe_items_on_meal_id", using: :btree
 
+  create_table "transactions", force: :cascade do |t|
+    t.boolean  "captured",                                     default: true
+    t.decimal  "amount",               precision: 8, scale: 2
+    t.integer  "order_id",   limit: 4
+    t.integer  "charge_id",  limit: 4
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
+  end
+
+  add_index "transactions", ["charge_id"], name: "index_transactions_on_charge_id", using: :btree
+  add_index "transactions", ["order_id"], name: "index_transactions_on_order_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "first_name",                      limit: 255
     t.string   "last_name",                       limit: 255
@@ -130,6 +142,7 @@ ActiveRecord::Schema.define(version: 20160613111735) do
     t.datetime "created_at",                                                  null: false
     t.datetime "updated_at",                                                  null: false
     t.integer  "prefered_location_id",            limit: 4
+    t.string   "stripe_user_id",                  limit: 255
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
@@ -148,4 +161,5 @@ ActiveRecord::Schema.define(version: 20160613111735) do
   add_foreign_key "orders", "users"
   add_foreign_key "recipe_items", "ingredients"
   add_foreign_key "recipe_items", "meals"
+  add_foreign_key "transactions", "orders"
 end

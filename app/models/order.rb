@@ -31,6 +31,7 @@ class Order < ActiveRecord::Base
   belongs_to :location
   has_many :line_items, dependent: :destroy
   has_many :meals, through: :line_items
+  # has_many :payment_transactions, as: :stripe_transaction
 
   before_save :set_price, :set_expiry_at
   after_destroy :reclaim
@@ -74,6 +75,7 @@ class Order < ActiveRecord::Base
     # self.pickup_time = pickup_time
     # time1.utc.strftime( "%H%M%S" ) <= time2.utc.strftime( "%H%M%S" )
     self.pickup_time = Time.new(1, 1, 1, pickup_time[:'pickup_time(4i)'].to_i, pickup_time[:'pickup_time(5i)'].to_i, 0)
+    # debugger
     self.contact_number = contact_number
     save
   end

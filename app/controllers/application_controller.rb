@@ -17,7 +17,12 @@ class ApplicationController < ActionController::Base
     end
 
     def current_order
-      @order || current_user.orders.pending.take || Order.new(user_id: current_user.id, location_id: current_location.id).save
+      @order ||= current_user.orders.pending.take
+      if !@order
+        @order ||= Order.create(user_id: current_user.id, location_id: current_location.id)
+        # @order.save
+      end
+      @order
     end
 
     def current_user
