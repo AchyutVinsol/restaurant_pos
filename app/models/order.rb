@@ -31,21 +31,23 @@ class Order < ActiveRecord::Base
   belongs_to :location
   has_many :line_items, dependent: :destroy
   has_many :meals, through: :line_items
-  # has_many :payment_transactions, as: :stripe_transaction
+  #FIXME_AB: dependent restrict
   has_many :transactions
 
-  # before_save :set_placed_at, on: [:place]
-  #FIXME_DONE: this would be set only on pending and being paid
+  #FIXME_AB: expiry shoudl be set when first item is set
+  #FIXME_AB: one rake task to delete all expired order
+  #FIXME_AB: one validation that expired orders can not be checkout/ current_order overweriet
   before_save :set_price, :set_expiry_at, if: :being_paid?
+  before_save :set_price, if: :pending?
   after_save :block_inventories, :send_order_placed_mail, if: :being_paid?
   after_destroy :unblock_inventory#, if: :being_paid?
 
   scope :pending, -> { where(status: :pending) }
 
+  #FIXME_AB: use hash
   enum status: [ :pending, :paid, :delivered ]
 
   validates :contact_number, presence: true, unless: 'pending?'
-  #FIXME_DONE: contact_number should be a string with 10 or integer which can hold greatest number of 10 digits
   validates :contact_number, numericality: { greater_than_or_equal_to: 1000000000 }, unless: 'pending?'
   validates_with PickupTimeValidator
   validates_with OrderIngredientsQuantityValidator
@@ -62,15 +64,6 @@ class Order < ActiveRecord::Base
   end
 
   def mark_paid(charge, params)
-    # this mark_paid will: 
-      #   1. make a Transaction
-      #   2. mark order as paid
-    # debugger
-    # self.pickup_time = pickup_time
-    # time1.utc.strftime( "%H%M%S" ) <= time2.utc.strftime( "%H%M%S" )
-    # debugger
-    # transactions.new(charge)
-    # debugger
     pickup_time = params[:order]
     transactions.build(charge_params(charge))
     self.status = 'paid'
@@ -83,7 +76,6 @@ class Order < ActiveRecord::Base
   private
 
     def unblock_inventory
-      #FIXME_DONE: just do this. line_items.each{|li| li.unblock_inventory}
       line_items.each do |li|
         li.block_inventories(location.inventory_items)
       end
@@ -138,7 +130,7 @@ class Order < ActiveRecord::Base
       # line_items.each do |li|
       #   total += (li.total * li.quantity)
       # end
-      self.price = line_items.sum{ |li| li.total * li.quantity }
+      self.price = line_items.to_a.sum{ |li| li.total * li.quantity }
     end
 
     def set_expiry_at

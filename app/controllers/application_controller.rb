@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
       return  unless signed_in?
       @order ||= current_user.orders.pending.where(location_id: current_location.id).take
       if !@order
-        @order ||= Order.create(user_id: current_user.id, location_id: current_location.id)
+        @order ||= current_user.orders.create(location_id: current_location.id)
         # @order.save
       end
       @order

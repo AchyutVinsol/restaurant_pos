@@ -13,11 +13,8 @@ class UserNotifier < ApplicationMailer
   end
 
   def order_placed_email(order)
-    #FIXME_DONE: you don't need to pass user. just pass order, order.user
     @user = order.user
-    #FIXME_DONE: Order.first?
     @order = order
-    #FIXME_DONE: need to add order id in subject
     mail to: @user.email, subject: "You have plced an order, your order ID is: #{ @order.id } !"
   end
 

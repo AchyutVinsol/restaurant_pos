@@ -32,7 +32,6 @@
               <%= hidden_field_tag :meal_id, @meal.id %>
               <% @meal.recipe_items.each do |recipe_item| %>
                 <tr>
-                <% #FIXME_DONE:  we don't need to show id to user -%>
                   <td><%= recipe_item.ingredient.name %></td>
                   <td><%= recipe_item.quantity %></td>
                   <% if recipe_item.ingredient.can_request_extra %>

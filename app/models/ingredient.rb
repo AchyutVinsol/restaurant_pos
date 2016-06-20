@@ -22,7 +22,7 @@ class Ingredient < ActiveRecord::Base
   validates :price, numericality: { greater_than_or_equal_to: 0.01 }, unless: 'price.blank?'
 
   has_many :inventory_items, dependent: :destroy
-  has_many :extra_items
+  # has_many :extra_items
   has_many :recipe_items, dependent: :destroy
   has_many :locations, through: :inventory_items
   has_many :meals, through: :recipe_items

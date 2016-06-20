@@ -22,22 +22,14 @@
 #
 
 class LineItem < ActiveRecord::Base
-  #FIXME_DONE: overwrite error message
   validates :meal, uniqueness: { scope: :order_id, message: ' already added to cart!' }
   validates_with ActiveMealValidator
   validates_with AvailableMealValidator
-  # validates_with LocationConsistencyValidator
-
-  #FIXME_DONE_DIFF: need a before_save to check that all items in the order are at same location
-  # before_save :consistent_location?
 
   belongs_to :meal
   belongs_to :order
   has_many :extra_items, dependent: :destroy
   accepts_nested_attributes_for :extra_items
-
-  #FIXME_DONE: this callback should run when order is pending or is being pending -> paid
-  # after_save :reduce_inventories
 
   def total
     price + extra_items.inject(0) { |sum, ei| sum + ei.price }
