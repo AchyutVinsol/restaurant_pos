@@ -9,4 +9,8 @@ class UserNotifierPreview < ActionMailer::Preview
     UserNotifier.forgot_password_email(User.first)
   end
 
+  def order_placed_email_preview
+    UserNotifier.order_placed_email(User.first, Order.first)
+  end
+
 end

@@ -1,7 +1,4 @@
 <% @location ||= location %>
-<% #FIXME_DONE: use number_to_currency -%>
-<% #FIXME_DONE: display comma seperated ingredients, display veg, nonveg tag -%>
-<% #FIXME_DONE: add discription to meal and display -%>
 <div class = "row">
   <div class='col-md-12'>
     <div class = "col-md-12">
@@ -38,9 +35,7 @@
             <% end %>
             <div class="caption">
               <h5 class='pull-left'><b>Ingredient :</b></h5>
-              <% meal.recipe_items.each do |recipe_item| %>
-                <h5 class='pull-left'><%= " #{recipe_item.ingredient.name}, "  %></h5>
-              <% end %>
+                <h5 class='pull-left'><%= meal_ingredients(meal) %></h5>
               <h5 class='pull-left'><%= "... "  %></h5>
             </div>
             </br>

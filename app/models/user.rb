@@ -17,6 +17,7 @@
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
 #  prefered_location_id            :integer
+#  stripe_user_id                  :string(255)
 #
 # Indexes
 #
@@ -29,6 +30,7 @@
 
 class User < ActiveRecord::Base
   has_secure_password
+  has_many :orders
 
   attr_accessor :password_required
 
@@ -53,6 +55,21 @@ class User < ActiveRecord::Base
   # skip_callback :commit, :after, :send_verification_email, if: -> { self.admin == true }
   skip_callback :create, :before, :genrate_email_verification_token, if: 'admin?'
   skip_callback :commit, :after, :send_verification_email, if: 'admin?'
+
+
+  def stripe_customer(stripeToken)
+    if stripe_user_id
+      customer = Stripe::Customer.retrieve(stripe_user_id)
+    else
+      customer = Stripe::Customer.create(
+        email: email,
+        source: stripeToken
+      )
+      self.stripe_user_id = customer.id
+      save!
+    end
+    customer
+  end
 
   def verify_email!
     self.verified_at = Time.current

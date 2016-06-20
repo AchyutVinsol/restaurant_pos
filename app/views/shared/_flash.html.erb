@@ -1,12 +1,12 @@
-<% if flash[:notice] %>
+<% if flash[:notice].present? %>
   <div>
     <p class="alert alert-dismissible alert-success"><%= flash[:notice] %></p>
   </div>
-<% elsif flash[:error] %>
+<% elsif flash[:error].present? %>
   <div>
     <p class="alert alert-dismissible alert-danger"><%= flash[:error] %></p>
   </div>
-<% elsif flash[:alert] %>
+<% elsif flash[:alert].present? %>
   <div>
     <p class="alert alert-dismissible alert-warning"><%= flash[:alert] %></p>
   </div>

@@ -18,9 +18,23 @@ Rails.application.routes.draw do
   end
 
   resources :locations do
+    member do
+      post :change
+    end
     resources :meals, only: [:show]
   end
-  resources :carts, only: [:show, :create]
+
+  resources :users, only: [:create, :new] do
+    resources :orders, only: [:delete, :show, :index] do
+      member do
+        post :place
+      end
+      resources :line_items, only: [:create, :delete, :show, :index]
+    end
+  end
+  
+
+
 
   namespace :admin do
 
@@ -46,12 +60,6 @@ Rails.application.routes.draw do
       resources :recipe_items
     end
 
-  end
-
-  resources :users, only: [:create, :new] do
-    member do
-      post :change_prefered_location
-    end
   end
 
 

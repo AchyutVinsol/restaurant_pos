@@ -5,3 +5,4 @@ REGEXP = {
   digit: /\d/
 }
 MINIMUM_SHIFT_HOURS = 6
+MEAL_VALIDITY_MINUTES = 5

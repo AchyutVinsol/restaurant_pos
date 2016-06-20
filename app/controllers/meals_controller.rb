@@ -1,8 +1,6 @@
 class MealsController < ApplicationController
   before_action :set_meal, only: [:show]
 
-  #FIXME_DONE: will be in contaxt of location, always
-
   def show
     @location = Location.where(id: params[:location_id]).take
   end
