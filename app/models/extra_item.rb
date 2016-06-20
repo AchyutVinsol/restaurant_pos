@@ -27,6 +27,10 @@ class ExtraItem < ActiveRecord::Base
 
   before_save :set_price
 
+  # validates :price, presence: true, numericality: { greater_than_or_equal_to: ->(ei) { ei.ingredient.price } }
+
+  #FIXME_DONE: add validations shoul not be blank  and >= lineitems price, WE!! are not giving the user any oppurtunity to input price of extra item
+
   private
 
     def set_price

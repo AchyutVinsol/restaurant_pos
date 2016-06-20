@@ -7,7 +7,7 @@ class CreateOrders < ActiveRecord::Migration
       t.timestamp :placed_at
       t.timestamp :pickup_time
       t.integer :status, default: 0
-      t.integer :contact_number, default: 99999
+      t.string :contact_number, default: '99999'
       t.decimal :price, precision: 8, scale: 2
 
       t.timestamps null: false

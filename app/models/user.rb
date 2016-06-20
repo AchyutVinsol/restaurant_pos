@@ -58,11 +58,6 @@ class User < ActiveRecord::Base
 
 
   def stripe_customer(stripeToken)
-    # require "stripe"
-    # Stripe.api_key = "sk_test_tE1XTfXsCsmtY0NhMrSybhYH"
-    # Stripe::Customer.retrieve("cus_8eDqyCxXI5GiuN")
-
-    # debugger
     if stripe_user_id
       customer = Stripe::Customer.retrieve(stripe_user_id)
     else
@@ -70,12 +65,10 @@ class User < ActiveRecord::Base
         email: email,
         source: stripeToken
       )
-      # debugger
       self.stripe_user_id = customer.id
-      save
-      customer
+      save!
     end
-    # debugger
+    customer
   end
 
   def verify_email!

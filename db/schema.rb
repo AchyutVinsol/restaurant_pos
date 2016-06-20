@@ -94,11 +94,11 @@ ActiveRecord::Schema.define(version: 20160617080559) do
     t.datetime "expiry_at"
     t.datetime "placed_at"
     t.datetime "pickup_time"
-    t.integer  "status",         limit: 4,                         default: 0
-    t.integer  "contact_number", limit: 4,                         default: 99999
-    t.decimal  "price",                    precision: 8, scale: 2
-    t.datetime "created_at",                                                       null: false
-    t.datetime "updated_at",                                                       null: false
+    t.integer  "status",         limit: 4,                           default: 0
+    t.string   "contact_number", limit: 255,                         default: "99999"
+    t.decimal  "price",                      precision: 8, scale: 2
+    t.datetime "created_at",                                                           null: false
+    t.datetime "updated_at",                                                           null: false
   end
 
   add_index "orders", ["location_id"], name: "index_orders_on_location_id", using: :btree
@@ -116,15 +116,22 @@ ActiveRecord::Schema.define(version: 20160617080559) do
   add_index "recipe_items", ["meal_id"], name: "index_recipe_items_on_meal_id", using: :btree
 
   create_table "transactions", force: :cascade do |t|
-    t.boolean  "captured",                                     default: true
-    t.decimal  "amount",               precision: 8, scale: 2
-    t.integer  "order_id",   limit: 4
-    t.integer  "charge_id",  limit: 4
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
+    t.boolean  "captured",                                        default: true
+    t.decimal  "amount",                  precision: 8, scale: 2
+    t.integer  "order_id",    limit: 4
+    t.string   "last4",       limit: 255,                         default: "xxxx"
+    t.string   "brand",       limit: 255,                         default: "Fake"
+    t.string   "currency",    limit: 255,                         default: "usd"
+    t.string   "card_id",     limit: 255
+    t.string   "charge_id",   limit: 255
+    t.string   "customer_id", limit: 255
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
   end
 
+  add_index "transactions", ["card_id"], name: "index_transactions_on_card_id", using: :btree
   add_index "transactions", ["charge_id"], name: "index_transactions_on_charge_id", using: :btree
+  add_index "transactions", ["customer_id"], name: "index_transactions_on_customer_id", using: :btree
   add_index "transactions", ["order_id"], name: "index_transactions_on_order_id", using: :btree
 
   create_table "users", force: :cascade do |t|

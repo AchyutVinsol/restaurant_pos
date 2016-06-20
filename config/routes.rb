@@ -7,8 +7,6 @@ Rails.application.routes.draw do
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create, :new]
 
-  resources :charges
-
   get "verify/:token", to: "users#verification", as: :account_verification
   get "/pages/:page" => "pages#show"
   get "/home" => "pages#show"

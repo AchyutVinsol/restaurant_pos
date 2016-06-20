@@ -16,14 +16,13 @@
       <h4><span class="label label-warning">Non-Vegetarian</span></h4>
     <% end %>
     <% @order = current_order %>
-    <h4>Listing recipe_items</h4>
+    <h4>Listing recipe items</h4>
     <%= form_tag(user_order_line_items_path(current_user, @order), class: 'form'  ) do %>
       <div class='col-md-5'>
         <fieldset>
           <table class="table table-striped table-hover" >
             <thead>
               <tr>
-                <th>#</th>
                 <th>Ingredient</th>
                 <th>Quantity</th>
                 <th>Request Extra?</th>
@@ -33,7 +32,7 @@
               <%= hidden_field_tag :meal_id, @meal.id %>
               <% @meal.recipe_items.each do |recipe_item| %>
                 <tr>
-                  <td><%= recipe_item.id %></td>
+                <% #FIXME_DONE:  we don't need to show id to user -%>
                   <td><%= recipe_item.ingredient.name %></td>
                   <td><%= recipe_item.quantity %></td>
                   <% if recipe_item.ingredient.can_request_extra %>

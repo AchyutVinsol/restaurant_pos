@@ -22,40 +22,69 @@
 #
 
 class LineItem < ActiveRecord::Base
-  validates :meal, uniqueness: { scope: :order_id }
-  # validates_uniqueness_of :meal_id, scope: :order_id
+  #FIXME_DONE: overwrite error message
+  validates :meal, uniqueness: { scope: :order_id, message: ' already added to cart!' }
   validates_with ActiveMealValidator
   validates_with AvailableMealValidator
+  # validates_with LocationConsistencyValidator
+
+  #FIXME_DONE_DIFF: need a before_save to check that all items in the order are at same location
+  # before_save :consistent_location?
 
   belongs_to :meal
   belongs_to :order
   has_many :extra_items, dependent: :destroy
   accepts_nested_attributes_for :extra_items
 
-  before_save :set_price
-  after_save :reduce_inventories
+  #FIXME_DONE: this callback should run when order is pending or is being pending -> paid
+  # after_save :reduce_inventories
 
   def total
     price + extra_items.inject(0) { |sum, ei| sum + ei.price }
   end
 
-  private
+  def set_price
+    self.price = meal.price
+  end
 
-    def set_price
-      self.price = meal.price
-    end
+  def consistent_location?
+    current_location == order.location
+  end
 
-    def reduce_inventories
-      @inventory_items = order.location.inventory_items
-      meal.recipe_items.each do |ri|
-        quantity = 0
-        if extra_items.any? { |ei| ei.ingredient_id == ri.ingredient_id }
-          quantity = ri.quantity + 1
-        else
-          quantity = ri.quantity
-        end
-        @inventory_items.where(ingredient_id: ri.ingredient_id).take.decrease_quantity(quantity * self.quantity)
-      end
+  #FIXME_LATER: block_inventories and unblock_inventories are very similar!, use yield?
+  def block_inventories(inventory_items)
+    meal.recipe_items.each do |ri|
+      quantity = ingredient_quantity_in_meal(ri)
+      inventory_items.where(ingredient_id: ri.ingredient_id).take.decrease_quantity(quantity * self.quantity)
     end
+  end
+
+  def unblock_inventories(inventory_items)
+    meal.recipe_items.each do |ri|
+      quantity = ingredient_quantity_in_meal(ri)
+      inventory_items.where(ingredient_id: ri.ingredient_id).take.increase_quantity(quantity * self.quantity)
+    end
+  end
+
+  def ingredient_quantity_in_meal(ri)
+    if extra_items.any? { |ei| ei.ingredient_id == ri.ingredient_id }
+      return ri.quantity + 1
+    else
+      return ri.quantity
+    end
+  end
+
+  # def unblock_inventories
+  #   @inventory_items = order.location.inventory_items
+  #   meal.recipe_items.each do |ri|
+  #     quantity = 0
+  #     if extra_items.any? { |ei| ei.ingredient_id == ri.ingredient_id }
+  #       quantity = ri.quantity + 1
+  #     else
+  #       quantity = ri.quantity
+  #     end
+  #     @inventory_items.where(ingredient_id: ri.ingredient_id).take.decrease_quantity(quantity * self.quantity)
+  #   end
+  # end
 
 end

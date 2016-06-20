@@ -23,8 +23,19 @@
 class Transaction < ActiveRecord::Base
   belongs_to :order
 
-  def create(charge)
-    
+  # def build(charge)
+  #   debugger
+  # end
+
+  def charge
+    @charge || Stripe::Charge.retrieve(charge_id)
+  end
+
+  def refund
+    @charge = charge
+    if @charge[:amount] > @charge[:amount_refunded]
+      Stripe::Refund.create(charge: @charge[:id])
+    end
   end
 
 end
