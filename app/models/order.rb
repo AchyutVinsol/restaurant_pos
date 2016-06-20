@@ -31,8 +31,8 @@ class Order < ActiveRecord::Base
   belongs_to :location
   has_many :line_items, dependent: :destroy
   has_many :meals, through: :line_items
-  #FIXME_AB: dependent restrict
-  has_many :transactions
+  #FIXME_DONE: dependent restrict
+  has_many :transactions, dependent: :restrict_with_error
 
   #FIXME_AB: expiry shoudl be set when first item is set
   #FIXME_AB: one rake task to delete all expired order
@@ -45,7 +45,7 @@ class Order < ActiveRecord::Base
   scope :pending, -> { where(status: :pending) }
 
   #FIXME_AB: use hash
-  enum status: [ :pending, :paid, :delivered ]
+  enum status: {pending: 0, paid: 1, delivered: 2}
 
   validates :contact_number, presence: true, unless: 'pending?'
   validates :contact_number, numericality: { greater_than_or_equal_to: 1000000000 }, unless: 'pending?'

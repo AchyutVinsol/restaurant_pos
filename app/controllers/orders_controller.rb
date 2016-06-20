@@ -25,7 +25,7 @@ class OrdersController < ApplicationController
     if @order.mark_paid(charge, params)
       redirect_to user_order_path(@order), notice: 'Your order has been successfully placed!'
     else
-      #FIXME_AB: test the refund by adding a validation in order which fails
+      #FIXME_DONE: test the refund by adding a validation in order which fails
       @order.transactions.first.refund
       redirect_to :back, alert: "The order could not be placed because of the following errors. \n #{@order.errors.full_messages.join(', ')}"
     end
