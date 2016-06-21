@@ -35,7 +35,6 @@ class Meal < ActiveRecord::Base
 
   validates_with PriceValidator
 
-
   scope :active, -> { where(active: true) }
 
   def quantity_available_by_location(location)
@@ -44,7 +43,7 @@ class Meal < ActiveRecord::Base
     ris.map{ |ri| iis.first{ |ii| ii.ingredient_id == ri.ingredient_id}.quantity / ri.quantity }.min
   end
 
-  def availability_by_location(location)
+  def available?(location)
     quantity_available_by_location(location) > 0    
   end
 
@@ -73,4 +72,5 @@ class Meal < ActiveRecord::Base
   def minimum_price
     recipe_items.inject(0){ |sum, recipe| sum + (recipe.quantity * recipe.ingredient.price) }.to_f
   end
+
 end

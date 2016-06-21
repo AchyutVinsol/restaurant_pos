@@ -2,6 +2,7 @@ class OrdersController < ApplicationController
 
   before_action :ensure_logged_in
   before_action :set_order, only: [:show, :place]
+  before_action :check_cancelable, only: [:destroy]
 
   def show
     @line_items = @order.line_items
@@ -15,11 +16,8 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    @user = current_user
-    @order = @user.orders.where(id: params[:id]).take
     @order.mark_canceled
     redirect_to user_orders_path(@user)
-    # @order.destroy
   end
 
   def index
@@ -53,6 +51,14 @@ class OrdersController < ApplicationController
   end
 
   private
+
+    def check_cancelable
+      @user = current_user
+      @order = @user.orders.where(id: params[:id]).take
+      if !@order.cancelable?
+        redirect_to user_orders_path(@user), alert: 'This order cannot be canceled, either because time restriction or status!'
+      end
+    end
 
     def set_order
       @order = current_order

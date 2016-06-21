@@ -85,6 +85,7 @@ class Order < ActiveRecord::Base
   end
 
   def mark_canceled
+    #FIXME_DONE: Check if can be cancled? using callback!
     debugger
     self.status = 'canceled'
     unblock_inventory
