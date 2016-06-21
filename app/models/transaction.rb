@@ -23,10 +23,6 @@
 class Transaction < ActiveRecord::Base
   belongs_to :order
 
-  # def build(charge)
-  #   debugger
-  # end
-
   def charge
     @charge || Stripe::Charge.retrieve(charge_id)
   end

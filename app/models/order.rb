@@ -34,18 +34,18 @@ class Order < ActiveRecord::Base
   #FIXME_DONE: dependent restrict
   has_many :transactions, dependent: :restrict_with_error
 
-  #FIXME_AB: expiry shoudl be set when first item is set
-  #FIXME_AB: one rake task to delete all expired order
-  #FIXME_AB: one validation that expired orders can not be checkout/ current_order overweriet
-  before_save :set_price, :set_expiry_at, if: :being_paid?
+  #FIXME_DONE: expiry shoudl be set when first item is set
+  #FIXME_DONE: one rake task to delete all expired order
+  #FIXME_DONE: one validation that expired orders can not be checkout/ current_order overwrite
+  before_save :set_expiry_at, if: :new_order?
   before_save :set_price, if: :pending?
   after_save :block_inventories, :send_order_placed_mail, if: :being_paid?
-  after_destroy :unblock_inventory#, if: :being_paid?
+  after_destroy :unblock_inventory
 
   scope :pending, -> { where(status: :pending) }
 
-  #FIXME_AB: use hash
-  enum status: {pending: 0, paid: 1, delivered: 2}
+  #FIXME_DONE: use hash
+  enum status: {pending: 0, paid: 1, delivered: 2, canceled: 3}
 
   validates :contact_number, presence: true, unless: 'pending?'
   validates :contact_number, numericality: { greater_than_or_equal_to: 1000000000 }, unless: 'pending?'
@@ -59,6 +59,10 @@ class Order < ActiveRecord::Base
     self.status == 'pending'
   end
 
+  def new_order?
+    line_items.present? && expiry_at.nil?
+  end
+
   def price_in_cents
     (price * 100).to_i
   end
@@ -68,9 +72,41 @@ class Order < ActiveRecord::Base
     transactions.build(charge_params(charge))
     self.status = 'paid'
     self.placed_at = Time.current
-    self.pickup_time = Time.new(1, 1, 1, pickup_time[:'pickup_time(4i)'].to_i, pickup_time[:'pickup_time(5i)'].to_i, 0)
+    self.pickup_time = Time.new(
+      Time.current.year,
+      Time.current.month,
+      Time.current.day,
+      pickup_time[:'pickup_time(4i)'].to_i,
+      pickup_time[:'pickup_time(5i)'].to_i,
+      0
+    )
     self.contact_number = params[:contact_number]
     save
+  end
+
+  def mark_canceled
+    debugger
+    self.status = 'canceled'
+    unblock_inventory
+    # refund order
+    refund_obj = transactions.first.refund
+    charge = Stripe::Charge.retrieve(refund_obj[:charge])
+    # save refund object or build another transaction from charge retrived from refund object
+    # transactions.build(charge_params(charge))
+    transactions.build(charge_params(charge))
+    save
+  end
+
+  def expired?
+    expiry_at.present? && (expiry_at > Time.current)
+  end
+
+  def time_till_pickup_in_minutes
+    ((pickup_time - Time.current) / 1.minutes).round
+  end
+
+  def cancelable?
+    status == 'paid' && (time_till_pickup_in_minutes > 30)
   end
 
   private
@@ -81,28 +117,11 @@ class Order < ActiveRecord::Base
       end
     end
 
-
     def block_inventories
       line_items.each do |li|
         li.block_inventories(location.inventory_items)
       end
     end
-
-    # def unblock_inventory
-    #   #FIXME_DONE: just do this. line_items.each{|li| li.unblock_inventory}
-    #   @inventory_items = location.inventory_items
-    #   line_items.each do |li|
-    #     li.meal.recipe_items.each do |ri|
-    #       quantity = 0
-    #       if extra_items.any? { |ei| ei.ingredient_id == ri.ingredient_id }
-    #         quantity = ri.quantity + 1
-    #       else
-    #         quantity = ri.quantity
-    #       end
-    #       @inventory_items.where(ingredient_id: ri.ingredient_id).take.increase_quantity(quantity * self.quantity)
-    #     end
-    #   end
-    # end
 
     def being_paid?
       status_was == 'pending' && status == 'paid'
@@ -125,11 +144,6 @@ class Order < ActiveRecord::Base
     end
 
     def set_price
-      # total = 0
-      # FIXME_DONE: do something like line_item.sum{|li| li.total}
-      # line_items.each do |li|
-      #   total += (li.total * li.quantity)
-      # end
       self.price = line_items.to_a.sum{ |li| li.total * li.quantity }
     end
 

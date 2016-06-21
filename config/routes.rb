@@ -25,11 +25,12 @@ Rails.application.routes.draw do
   end
 
   resources :users, only: [:create, :new] do
-    resources :orders, only: [:delete, :show, :index] do
+    resources :orders, only: [:destroy, :show, :index, :edit] do
       member do
         post :place
+        get :details
       end
-      resources :line_items, only: [:create, :delete, :show, :index]
+      resources :line_items, only: [:create, :destroy, :show, :index]
     end
   end
   

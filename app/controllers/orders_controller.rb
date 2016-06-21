@@ -7,8 +7,24 @@ class OrdersController < ApplicationController
     @line_items = @order.line_items
   end
 
+  def details
+    # debugger
+    @user = current_user
+    @order = @user.orders.where(id: params[:id]).take
+    @transaction = @order.transactions.first
+  end
+
+  def destroy
+    @user = current_user
+    @order = @user.orders.where(id: params[:id]).take
+    @order.mark_canceled
+    redirect_to user_orders_path(@user)
+    # @order.destroy
+  end
+
   def index
-    @orders = current_user.orders.includes(:location)
+    @user = current_user
+    @orders = @user.orders.where.not(status: "pending").includes(:location)
   end
 
   def place
@@ -23,7 +39,7 @@ class OrdersController < ApplicationController
     )
 
     if @order.mark_paid(charge, params)
-      redirect_to user_order_path(@order), notice: 'Your order has been successfully placed!'
+      redirect_to user_order_path(@user, @order), notice: 'Your order has been successfully placed!'
     else
       #FIXME_DONE: test the refund by adding a validation in order which fails
       @order.transactions.first.refund
@@ -36,11 +52,11 @@ class OrdersController < ApplicationController
 
   end
 
-
   private
 
     def set_order
       @order = current_order
+      # @order = Order.where(id: parms[:id]).take
     end
 
 end

@@ -6,7 +6,6 @@
       <thead>
         <tr>
           <th>Location</th>
-          <th>Expiry</th>
           <th>Placed At</th>
           <th>Pickup Time</th>
           <th>Status</th>
@@ -19,13 +18,19 @@
         <% @orders.each do |order| %>
           <tr>
             <td><%= order.location.name %></td>
-            <td><%= order.expiry_at %></td>
-            <td><%= order.placed_at %></td>
-            <td><%= order.pickup_time %></td>
+            <td><%= order.placed_at.to_s(:short) %></td>
+            <td><%= order.pickup_time.to_s(:time) %></td>
             <td><%= order.status %></td>
             <td><%= order.contact_number %></td>
-            <td><%= order.price %></td>
-            <td><%= 'Give show button!' %></td>
+            <td><%= number_to_currency(order.price) %></td>
+            <td>
+              <div class="btn-group">
+                <%= link_to 'Show', details_user_order_path(@user, order), class: 'btn btn-info' %>
+                <% if order.cancelable? %>
+                  <%= link_to 'Cancel', user_order_path(@user, order), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+                <% end %>
+              </div>
+            </td>
           </tr>
         <% end %>
       </tbody>
