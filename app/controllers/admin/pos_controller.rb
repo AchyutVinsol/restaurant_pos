@@ -1,20 +1,30 @@
 class Admin::PosController < Admin::BaseController
   layout 'pos'
 
+  before_action :set_location
+
   def index
-    @user = current_user
-    @location = Location.where(name: params[:location_name]).take
-    @orders = @location.orders.where.not(status: 0)
     # debugger
-    @orders = @orders.to_a.sort! { |a,b| a.pickup_time <=> b.pickup_time }
+    @orders = @location.orders.not_pending.order(:pickup_time)
   end
 
   def deliver
-    # debugger
-    @location = Location.where(id: params[:location_id]).take
     @order = @location.orders.where(id: params[:order_id]).take
-    @order.mark_delivered
-    redirect_to :back
+    if @order.mark_delivered
+      redirect_to :back, notice: "Order ID:#{@order.id} was delivered!"
+    else
+      redirect_to :back, alert: "Unable to mark order ID:#{@order.id} as delivered due to the following reasons. #{@order.errors.full_messages.join(', ')}"
+    end
   end
+
+  private
+
+    def set_location
+      if params[:location_name].nil?
+        @location = Location.where(id: params[:location_id]).take
+      else
+        @location = Location.where(name: params[:location_name]).take
+      end
+    end
 
 end

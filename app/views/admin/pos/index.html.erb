@@ -38,9 +38,9 @@
                 <% if order.ready? %>
                   <%= link_to 'Deliver Order', admin_deliver_path(@location, order), class: 'btn btn-warning' %>
                 <% end %>
-                <%= link_to 'Show', details_user_order_path(@user, order), class: 'btn btn-info' %>
+                <%= link_to 'Show', details_user_order_path(current_user, order), class: 'btn btn-info' %>
                 <% if order.cancelable? %>
-                  <%= link_to 'Cancel', user_order_path(@user, order), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+                  <%= link_to 'Cancel', user_order_path(current_user, order), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
                 <% end %>
               </div>
             </td>

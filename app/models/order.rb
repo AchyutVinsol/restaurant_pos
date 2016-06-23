@@ -42,7 +42,8 @@ class Order < ActiveRecord::Base
   after_save :block_inventories, :send_order_placed_mail, if: :being_paid?
   after_destroy :unblock_inventory
 
-  scope :pending, -> { where(status: :pending) }
+  scope :pending, -> { where(status: 0) }
+  scope :not_pending, -> { where.not(status: 0) }
 
   #FIXME_DONE: use hash
   enum status: {pending: 0, paid: 1, delivered: 2, canceled: 3}
