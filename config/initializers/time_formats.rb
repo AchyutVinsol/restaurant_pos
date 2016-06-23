@@ -1,1 +1,1 @@
-Time::DATE_FORMATS[:compareable] = '%H%M%S%N'
+Time::DATE_FORMATS[:compareable] = '%H%M%S'

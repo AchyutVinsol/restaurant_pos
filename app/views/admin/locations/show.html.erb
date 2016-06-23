@@ -37,7 +37,6 @@
       <%= javascript_include_tag 'admin/meals' %>
       <thead>
         <tr>
-          <th>#</th>
           <th>Name</th>
           <th>Price</th>
           <th>Image</th>
@@ -52,9 +51,6 @@
       <% end %>
       </tbody>
     </table>
-    <h4>
-      <%= "Closes at: #{ @location.closing_time.strftime("%I:%M%p") }" %>
-    </h4>
     </br>
   </div>
 </div>

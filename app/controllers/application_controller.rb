@@ -8,11 +8,11 @@ class ApplicationController < ActionController::Base
 
     def current_location
       if current_user
-        Location.includes(:meals).where(id: current_user.prefered_location_id).take || Location.default
+        Location.includes(:meals).where(id: current_user.prefered_location_id).take || get_default_location
       elsif session[:location]
-        Location.find_by(id: session[:location])
+        Location.where(id: session[:location]).take
       else
-        Location.default
+        get_default_location
       end
     end
 
@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
         # @order.save
       end
       @order
+    end
+
+    def get_default_location
+      @default_location = @default_location || (@default_location = Location.where(default_location: true).take) || Location.first.set_default
     end
 
     def current_user

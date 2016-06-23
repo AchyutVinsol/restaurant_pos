@@ -15,7 +15,8 @@ class LocationsController < ApplicationController
   private
 
     def get_meal_by_type(preference)
-      @meals = current_location.meals.active.includes(:ingredients, :recipe_items)
+      # debugger
+      @meals = @location.meals.active.includes(:ingredients, :recipe_items)
       @meals = @meals.select { |meal| meal.veg? } if preference == 'Veg'
       @meals = @meals.select { |meal| !meal.veg? } if preference == 'Non-Veg'
       @meals = @meals.select { |meal| meal.available?(@location) }

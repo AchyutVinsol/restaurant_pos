@@ -1,5 +1,5 @@
 class MealsController < ApplicationController
-  before_action :set_meal, only: [:show]
+  before_action :set_meal, :ensure_logged_in
 
   def show
     @location = Location.where(id: params[:location_id]).take

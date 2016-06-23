@@ -27,8 +27,8 @@
 
 class Order < ActiveRecord::Base
   belongs_to :user
-
   belongs_to :location
+
   has_many :line_items, dependent: :destroy
   has_many :meals, through: :line_items
   #FIXME_DONE: dependent restrict
@@ -69,18 +69,26 @@ class Order < ActiveRecord::Base
 
   def mark_paid(charge, params)
     pickup_time = params[:order]
+    debugger
     transactions.build(charge_params(charge))
     self.status = 'paid'
     self.placed_at = Time.current
     self.pickup_time = Time.new(
-      Time.current.year,
-      Time.current.month,
-      Time.current.day,
+      pickup_time[:'pickup_time(1i)'].to_i,
+      pickup_time[:'pickup_time(2i)'].to_i,
+      pickup_time[:'pickup_time(3i)'].to_i,
       pickup_time[:'pickup_time(4i)'].to_i,
       pickup_time[:'pickup_time(5i)'].to_i,
       0
     )
+    # self.pickup_time = Time.new(pickup_time[:'pickup_time(1i)'].to_i, pickup_time[:'pickup_time(2i)'].to_i, pickup_time[:'pickup_time(3i)'].to_i, pickup_time[:'pickup_time(4i)'].to_i, pickup_time[:'pickup_time(5i)'].to_i, 0).in_time_zone("New Delhi")
+    debugger
     self.contact_number = params[:contact_number]
+    save
+  end
+
+  def mark_delivered
+    self.status = 'delivered'
     save
   end
 
@@ -100,6 +108,10 @@ class Order < ActiveRecord::Base
 
   def expired?
     expiry_at.present? && (expiry_at > Time.current)
+  end
+
+  def ready?
+    status == 'paid'
   end
 
   def time_till_pickup_in_minutes

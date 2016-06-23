@@ -23,15 +23,14 @@ class Location < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :state, :city, :opening_time, :closing_time, presence: true
-
-  has_many :inventory_items, dependent: :destroy
-  has_many :orders#, dependent: :destroy
-  has_many :ingredients, through: :inventory_items
-  has_many :meals, -> { distinct }, through: :ingredients
-
   validates_with ShiftValidator
 
-  scope :default, -> { where(default_location: true).take }
+  has_many :orders
+  has_many :inventory_items, dependent: :destroy
+  has_many :ingredients, through: :inventory_items
+  has_many :meals, ->{ distinct }, through: :ingredients
+
+  # scope :default, -> { where(default_location: true).first }
 
   after_create :create_inventory_items
   before_save :ensure_single_default
@@ -40,12 +39,24 @@ class Location < ActiveRecord::Base
     meals.active.includes(:recipe_items).select { |meal| meal.quantity_available_by_location(self) }
   end
 
+  def default
+    Location.where(default_location: true).take
+  end
+
+  def set_default
+    default_location = true
+    save!
+    return self
+  end
+
   private
 
     def ensure_single_default
       if default_location
         begin
-          if Location.default
+          current_default = default
+          # debugger
+          if current_default
             current_default.default_location = false
             current_default.save
           end
@@ -56,7 +67,6 @@ class Location < ActiveRecord::Base
     end
 
     def create_inventory_items
-      #create an invetory item of location for each ingredient
       Ingredient.find_each do |ingredient|
         inventory_item = ingredient.inventory_items.new
         inventory_item.location_id = id

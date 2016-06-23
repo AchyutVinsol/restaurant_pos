@@ -37,7 +37,7 @@ class OrdersController < ApplicationController
     )
 
     if @order.mark_paid(charge, params)
-      redirect_to user_order_path(@user, @order), notice: 'Your order has been successfully placed!'
+      redirect_to details_user_order_path(@user, @order), notice: 'Your order has been successfully placed!'
     else
       #FIXME_DONE: test the refund by adding a validation in order which fails
       @order.transactions.first.refund
