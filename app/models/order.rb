@@ -31,21 +31,18 @@ class Order < ActiveRecord::Base
 
   has_many :line_items, dependent: :destroy
   has_many :meals, through: :line_items
-  #FIXME_DONE: dependent restrict
   has_many :transactions, dependent: :restrict_with_error
 
-  #FIXME_DONE: expiry shoudl be set when first item is set
-  #FIXME_DONE: one rake task to delete all expired order
-  #FIXME_DONE: one validation that expired orders can not be checkout/ current_order overwrite
+  #FIXME_AB: one validation that expired orders can not be checkout
   before_save :set_expiry_at, if: :new_order?
   before_save :set_price, if: :pending?
   after_save :block_inventories, :send_order_placed_mail, if: :being_paid?
   after_destroy :unblock_inventory
 
+  #FIXME_AB: dont use status: 0 or one use statuses[:pending] etc
   scope :pending, -> { where(status: 0) }
   scope :not_pending, -> { where.not(status: 0) }
 
-  #FIXME_DONE: use hash
   enum status: {pending: 0, paid: 1, delivered: 2, canceled: 3}
 
   validates :contact_number, presence: true, unless: 'pending?'
@@ -54,7 +51,6 @@ class Order < ActiveRecord::Base
   validates_with OrderIngredientsQuantityValidator
 
   # validates_with AvaliableMealValidator
-  #FIXME_DONE: add a field placed_at and set it with a callback when order is placed
 
   def pending?
     self.status == 'pending'
@@ -70,7 +66,6 @@ class Order < ActiveRecord::Base
 
   def mark_paid(charge, params)
     pickup_time = params[:order]
-    debugger
     transactions.build(charge_params(charge))
     self.status = 'paid'
     self.placed_at = Time.current
@@ -83,7 +78,6 @@ class Order < ActiveRecord::Base
       0
     )
     # self.pickup_time = Time.new(pickup_time[:'pickup_time(1i)'].to_i, pickup_time[:'pickup_time(2i)'].to_i, pickup_time[:'pickup_time(3i)'].to_i, pickup_time[:'pickup_time(4i)'].to_i, pickup_time[:'pickup_time(5i)'].to_i, 0).in_time_zone("New Delhi")
-    debugger
     self.contact_number = params[:contact_number]
     save
   end
@@ -94,8 +88,7 @@ class Order < ActiveRecord::Base
   end
 
   def mark_canceled
-    #FIXME_DONE: Check if can be cancled? using callback!
-    debugger
+    #FIXME_AB: check if cancelable
     self.status = 'canceled'
     unblock_inventory
     # refund order
@@ -111,6 +104,7 @@ class Order < ActiveRecord::Base
     expiry_at.present? && (expiry_at > Time.current)
   end
 
+  #FIXME_AB: paid? pending? delivered? canceled?
   def ready?
     status == 'paid'
   end
@@ -120,6 +114,8 @@ class Order < ActiveRecord::Base
   end
 
   def cancelable?
+    #FIXME_AB: pickup_time > 30.minutes.from_now 
+    #FIXME_AB: 30 should be moved to constant
     status == 'paid' && (time_till_pickup_in_minutes > 30)
   end
 

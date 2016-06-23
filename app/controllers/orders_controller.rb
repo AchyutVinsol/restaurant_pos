@@ -9,14 +9,15 @@ class OrdersController < ApplicationController
   end
 
   def details
-    # debugger
     @user = current_user
     @order = @user.orders.where(id: params[:id]).take
     @transaction = @order.transactions.first
   end
 
   def destroy
+    #FIXME_AB: what if it is not cancled? 
     @order.mark_canceled
+    #FIXME_AB: no notice for user 
     redirect_to user_orders_path(@user)
   end
 
@@ -39,7 +40,6 @@ class OrdersController < ApplicationController
     if @order.mark_paid(charge, params)
       redirect_to details_user_order_path(@user, @order), notice: 'Your order has been successfully placed!'
     else
-      #FIXME_DONE: test the refund by adding a validation in order which fails
       @order.transactions.first.refund
       redirect_to :back, alert: "The order could not be placed because of the following errors. \n #{@order.errors.full_messages.join(', ')}"
     end
@@ -55,6 +55,7 @@ class OrdersController < ApplicationController
     def check_cancelable
       @user = current_user
       @order = @user.orders.where(id: params[:id]).take
+      #FIXME_AB: not needed here, move it to mark_canceled
       if !@order.cancelable?
         redirect_to user_orders_path(@user), alert: 'This order cannot be canceled, either because time restriction or status!'
       end
@@ -62,7 +63,6 @@ class OrdersController < ApplicationController
 
     def set_order
       @order = current_order
-      # @order = Order.where(id: parms[:id]).take
     end
 
 end

@@ -1,6 +1,7 @@
 <div class = "row">
   <div class='col-md-12'>
     <h2>Listing orders</h2>
+    <% #FIXME_AB: do we need this modal -%>
     <%= render partial: 'shared/modal' %>
     <table class="table table-striped table-hover" >
       <thead>
@@ -23,11 +24,14 @@
             <td><%= order.placed_at.to_s(:short) %></td>
             <td><%= order.pickup_time.to_s(:short) %></td>
             <td>
+            <% #FIXME_AB: order.paid? -%>
               <% if order.status == 'paid' %>
                 <span class="label label-success">Paid</span>
+                <% #FIXME_AB: order.canceled? -%>
               <% elsif order.status == 'canceled' %>
                 <span class="label label-danger">Canceled</span>
               <% else %>
+              <% #FIXME_AB: order.delivered? -%>
                 <span class="label label-info">Delivered</span>
               <% end %>
             </td>
@@ -35,9 +39,11 @@
             <td><%= number_to_currency(order.price) %></td>
             <td>
               <div class="btn-group">
+              <% #FIXME_AB: order.paid? -%>
                 <% if order.ready? %>
                   <%= link_to 'Deliver Order', admin_deliver_path(@location, order), class: 'btn btn-warning' %>
                 <% end %>
+                <% #FIXME_AB: pos controller should have a show page. like cancle -%>
                 <%= link_to 'Show', details_user_order_path(current_user, order), class: 'btn btn-info' %>
                 <% if order.cancelable? %>
                   <%= link_to 'Cancel', user_order_path(current_user, order), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>

@@ -29,6 +29,7 @@
 
 class Transaction < ActiveRecord::Base
   belongs_to :order
+  #FIXME_AB: add required validations
 
   def charge
     @charge || Stripe::Charge.retrieve(charge_id)

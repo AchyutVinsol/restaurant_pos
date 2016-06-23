@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
     end
 
     def get_default_location
-      @default_location = @default_location || (@default_location = Location.where(default_location: true).take) || Location.first.set_default
+      @default_location = @default_location || (Location.where(default_location: true).take) || Location.first.set_default
     end
 
     def current_user
