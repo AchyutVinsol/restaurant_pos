@@ -44,7 +44,7 @@ class Location < ActiveRecord::Base
   end
 
   def set_default
-    default_location = true
+    self.default_location = true
     save!
     return self
   end
