@@ -6,10 +6,6 @@ class Admin::BaseController < ApplicationController
 
   protected
 
-    def sort_by_pickup(orders)
-      orders.to_a.sort! { |a,b| a.pickup_time <=> b.pickup_time }
-    end
-
     def admin_privlage_required
       unless current_user.admin?
         redirect_to home_url, notice: 'You must be logged in as an admin to view this page.'
