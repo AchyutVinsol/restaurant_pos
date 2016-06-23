@@ -4,10 +4,12 @@ class Admin::PosController < Admin::BaseController
   before_action :set_location
 
   def index
-    # debugger
+    #FIXME_AB: eagerloading
     @orders = @location.orders.not_pending.order(:pickup_time)
   end
 
+  #FIXME_AB: I am not able to deliver any order or cancle
+  ##FIXME_AB: cancel action should be here
   def deliver
     @order = @location.orders.where(id: params[:order_id]).take
     if @order.mark_delivered
@@ -25,6 +27,7 @@ class Admin::PosController < Admin::BaseController
       else
         @location = Location.where(name: params[:location_name]).take
       end
+      #FIXME_AB: what if location not found
     end
 
 end
