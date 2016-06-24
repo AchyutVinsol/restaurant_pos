@@ -1,0 +1,66 @@
+<div class = "row">
+  <div class='col-md-12'>
+    <h2>For location : <%= @location.name %></h2>
+    <h2>The most popular meal of all time is : </h2>
+    <h3>
+      <%= "Meal: #{ @meal.name }" %>
+    </h3>
+    <%= image_tag @meal.image.url(:medium) %>
+    <% if @meal.veg? %>
+      <h4><span class="label label-success">Vegetarian</span></h4>
+    <% else %>
+      <h4><span class="label label-warning">Non-Vegetarian</span></h4>
+    <% end %>
+    <h3>
+      <%= "Price: #{ number_to_currency(@meal.price) }" %>
+    </h3>
+    <h3>Listing recipe items</h3>
+    <table  class="table table-striped table-hover" >
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @meal.recipe_items.each do |recipe_item| %>
+          <%= render recipe_item %>
+        <% end %>
+      </tbody>
+    </table>    
+    </br>
+    </br>
+    </br>
+    <h2>The most popular meal of the day is : </h2>
+    <% if @meal_day.nil? %>
+      <h2>No meals sold today!!</h2>
+    <% else %>
+      <h3>
+        <%= "Meal: #{ @meal_day.name }" %>
+      </h3>
+      <%= image_tag @meal_day.image.url(:medium) %>
+      <% if @meal_day.veg? %>
+        <h4><span class="label label-success">Vegetarian</span></h4>
+      <% else %>
+        <h4><span class="label label-warning">Non-Vegetarian</span></h4>
+      <% end %>
+      <h3>
+        <%= "Price: #{ number_to_currency(@meal_day.price) }" %>
+      </h3>
+      <h3>Listing recipe items</h3>
+      <table  class="table table-striped table-hover" >
+        <thead>
+          <tr>
+            <th>Ingredient</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @meal_day.recipe_items.each do |recipe_item| %>
+            <%= render recipe_item %>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

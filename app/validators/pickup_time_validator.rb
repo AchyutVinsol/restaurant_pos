@@ -2,6 +2,7 @@ class PickupTimeValidator < ActiveModel::Validator
   def validate(order)
     location = order.location
     #FIXME_DONE: move this condition in model. also not for pending for being paid
+    # debugger
     pickup_time = order.pickup_time.to_s(:compareable)
     compareable_closing_time = location.closing_time.to_s(:compareable)
     compareable_opening_time = location.opening_time.to_s(:compareable)

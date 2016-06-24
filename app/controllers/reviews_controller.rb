@@ -14,7 +14,7 @@ class ReviewsController < ApplicationController
   end
 
   def index
-    debugger
+    # debugger
   end
 
   private

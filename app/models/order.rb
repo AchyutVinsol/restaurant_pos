@@ -51,7 +51,7 @@ class Order < ActiveRecord::Base
 
   validates :contact_number, presence: true, unless: 'pending?'
   validates :contact_number, numericality: { greater_than_or_equal_to: 1000000000 }, unless: 'pending?'
-  validates_with PickupTimeValidator, if: 'pending?'
+  validates_with PickupTimeValidator, if: 'being_paid?'
   validates_with OrderIngredientsQuantityValidator, if: 'being_paid?'
 
   # validates_with AvaliableMealValidator
@@ -105,9 +105,8 @@ class Order < ActiveRecord::Base
   end
 
   def mark_canceled
-    #FIXME_DONE: not needed here, move it to mark_canceled
-    #FIXME_DONE: check if cancelable
     return false if !cancelable?
+    #FIXME_AB: wrap in transaction
     self.status = 'canceled'
     unblock_inventory
     refund_obj = transactions.first.refund

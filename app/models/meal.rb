@@ -62,7 +62,7 @@ class Meal < ActiveRecord::Base
     if reviews.size == 0
       return 0
     else
-      reviews.sum(:rating) / reviews.size
+      reviews.sum(:rating).to_f / reviews.size
     end
   end
 

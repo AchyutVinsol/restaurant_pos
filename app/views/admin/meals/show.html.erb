@@ -6,7 +6,7 @@
       <%= link_to 'Destroy', admin_meal_path(@meal), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' %>
     </div>
     <h3>
-      <%= "Meal: #{ @meal.name }" %>    
+      <%= "Meal: #{ @meal.name }" %>
     </h3>
     <h3>
       <%= "Price: #{ number_to_currency(@meal.price) }" %>

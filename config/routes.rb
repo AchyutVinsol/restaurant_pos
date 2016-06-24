@@ -38,7 +38,6 @@ Rails.application.routes.draw do
 
 
 
-
   namespace :admin do
 
     get 'pos/:location_name', to: 'pos#index', as: 'pos_index'
@@ -47,6 +46,7 @@ Rails.application.routes.draw do
     get 'pos/:location_id/:order_id/show', to: 'pos#show', as: 'pos_show'
 
     resources :locations do
+      get 'reports', to: 'reports#show', as: 'reports_show'
       resources :meals
       resources :inventory_items, only: [:index]
       resources :inventory_items, only: [], shallow: true  do
