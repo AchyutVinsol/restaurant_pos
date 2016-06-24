@@ -21,7 +21,9 @@ Rails.application.routes.draw do
     member do
       post :change
     end
-    resources :meals, only: [:show]
+    resources :meals, only: [:show] do
+      resources :reviews
+    end
   end
 
   resources :users, only: [:create, :new] do
@@ -36,10 +38,13 @@ Rails.application.routes.draw do
 
 
 
+
   namespace :admin do
 
     get 'pos/:location_name', to: 'pos#index', as: 'pos_index'
-    get 'pos/:location_id/:order_id', to: 'pos#deliver', as: 'deliver'
+    get 'pos/:location_id/:order_id/deliver', to: 'pos#deliver', as: 'pos_deliver'
+    get 'pos/:location_id/:order_id/cancel', to: 'pos#cancel', as: 'pos_cancel'
+    get 'pos/:location_id/:order_id/show', to: 'pos#show', as: 'pos_show'
 
     resources :locations do
       resources :meals

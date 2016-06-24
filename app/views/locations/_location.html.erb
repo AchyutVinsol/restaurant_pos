@@ -33,6 +33,9 @@
             <% else %>
               <h4><span class="label label-warning">Non-Vegetarian</span></h4>
             <% end %>
+            <div class="pull-right">
+              <%= 'Rating: ' + meal.rating.to_s %>
+            </div>
             <div class="caption">
               <h5 class='pull-left'><b>Ingredient :</b></h5>
                 <h5 class='pull-left'><%= meal_ingredients(meal) %></h5>

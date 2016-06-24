@@ -33,27 +33,44 @@ class Order < ActiveRecord::Base
   has_many :meals, through: :line_items
   has_many :transactions, dependent: :restrict_with_error
 
-  #FIXME_AB: one validation that expired orders can not be checkout
+  #FIXME_DONE: one validation that expired orders can not be checkout
   before_save :set_expiry_at, if: :new_order?
   before_save :set_price, if: :pending?
   after_save :block_inventories, :send_order_placed_mail, if: :being_paid?
   after_destroy :unblock_inventory
 
-  #FIXME_AB: dont use status: 0 or one use statuses[:pending] etc
-  scope :pending, -> { where(status: 0) }
-  scope :not_pending, -> { where.not(status: 0) }
+  #FIXME_DONE: dont use status: 0 or one use statuses[:pending] etc
+  scope :pending, -> { where(status: statuses[:pending]) }
+  scope :delivered, -> { where(status: statuses[:delivered]) }
+  scope :not_pending, -> { where.not(status: statuses[:pending]) }
+  # scope :expired, lambda {|order| where("start_date >=?", x) }
+  # expiry_at.present? && (expiry_at > Time.current)
+
 
   enum status: {pending: 0, paid: 1, delivered: 2, canceled: 3}
 
   validates :contact_number, presence: true, unless: 'pending?'
   validates :contact_number, numericality: { greater_than_or_equal_to: 1000000000 }, unless: 'pending?'
-  validates_with PickupTimeValidator
-  validates_with OrderIngredientsQuantityValidator
+  validates_with PickupTimeValidator, if: 'pending?'
+  validates_with OrderIngredientsQuantityValidator, if: 'being_paid?'
 
   # validates_with AvaliableMealValidator
+  #FIXME_DONE: paid? pending? delivered? canceled?
 
   def pending?
     self.status == 'pending'
+  end
+
+  def delivered?
+    status == 'delivered'
+  end
+
+  def canceled?
+    status == 'canceled'
+  end
+
+  def paid?
+    status == 'paid'
   end
 
   def new_order?
@@ -65,6 +82,7 @@ class Order < ActiveRecord::Base
   end
 
   def mark_paid(charge, params)
+    return false if expired?
     pickup_time = params[:order]
     transactions.build(charge_params(charge))
     self.status = 'paid'
@@ -77,7 +95,6 @@ class Order < ActiveRecord::Base
       pickup_time[:'pickup_time(5i)'].to_i,
       0
     )
-    # self.pickup_time = Time.new(pickup_time[:'pickup_time(1i)'].to_i, pickup_time[:'pickup_time(2i)'].to_i, pickup_time[:'pickup_time(3i)'].to_i, pickup_time[:'pickup_time(4i)'].to_i, pickup_time[:'pickup_time(5i)'].to_i, 0).in_time_zone("New Delhi")
     self.contact_number = params[:contact_number]
     save
   end
@@ -88,42 +105,32 @@ class Order < ActiveRecord::Base
   end
 
   def mark_canceled
-    #FIXME_AB: check if cancelable
+    #FIXME_DONE: not needed here, move it to mark_canceled
+    #FIXME_DONE: check if cancelable
+    return false if !cancelable?
     self.status = 'canceled'
     unblock_inventory
-    # refund order
     refund_obj = transactions.first.refund
     charge = Stripe::Charge.retrieve(refund_obj[:charge])
-    # save refund object or build another transaction from charge retrived from refund object
-    # transactions.build(charge_params(charge))
     transactions.build(charge_params(charge))
     save
   end
 
   def expired?
-    expiry_at.present? && (expiry_at > Time.current)
-  end
-
-  #FIXME_AB: paid? pending? delivered? canceled?
-  def ready?
-    status == 'paid'
-  end
-
-  def time_till_pickup_in_minutes
-    ((pickup_time - Time.current) / 1.minutes).round
+    expiry_at.present? && (expiry_at < Time.current)
   end
 
   def cancelable?
-    #FIXME_AB: pickup_time > 30.minutes.from_now 
-    #FIXME_AB: 30 should be moved to constant
-    status == 'paid' && (time_till_pickup_in_minutes > 30)
+    #FIXME_DONE: pickup_time > 30.minutes.from_now 
+    #FIXME_DONE: 30 should be moved to constant
+    status == 'paid' && (pickup_time < CANCELATION_BUFFER_MINUTES.minutes.from_now)
   end
 
   private
 
     def unblock_inventory
       line_items.each do |li|
-        li.block_inventories(location.inventory_items)
+        li.unblock_inventories(location.inventory_items)
       end
     end
 
@@ -149,6 +156,8 @@ class Order < ActiveRecord::Base
         brand: charge[:source].brand,
         card_id: charge[:source].id,
         customer_id: charge[:source].customer,
+        # amount_refunded: charge.amount_refunded,
+        # refunded: charge.refunded,
         last4: charge[:source].last4
       }
     end

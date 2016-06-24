@@ -41,7 +41,6 @@ class Admin::MealsController < Admin::BaseController
   end
 
   def change_status
-    # debugger
     if @meal.toogle_status
       render json: { status: 'success', active: @meal.active }
     else

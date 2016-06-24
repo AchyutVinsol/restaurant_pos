@@ -2,14 +2,20 @@ class Admin::PosController < Admin::BaseController
   layout 'pos'
 
   before_action :set_location
+  before_action :set_location_order, only: [:show, :cancel]
 
   def index
-    #FIXME_AB: eagerloading
-    @orders = @location.orders.not_pending.order(:pickup_time)
+    #FIXME_DONE: eagerloading
+    @orders = @location.orders.not_pending.order(:pickup_time).includes(:user)
   end
 
-  #FIXME_AB: I am not able to deliver any order or cancle
-  ##FIXME_AB: cancel action should be here
+  def show
+    @transaction = @order.transactions.first
+  end
+
+  #FIXME_DONE: I am not able to deliver any order or cancle
+  #FIXME_DONE: cancel action should be here
+
   def deliver
     @order = @location.orders.where(id: params[:order_id]).take
     if @order.mark_delivered
@@ -19,15 +25,31 @@ class Admin::PosController < Admin::BaseController
     end
   end
 
+  def cancel
+    if @order.mark_canceled
+      redirect_to :back, notice: "Order #{@order.id} has been cancled."
+    else
+      redirect_to :back, alert: "Order #{@order.id} could not be cancled, because of time restriction ,status or errors. #{@order.errors.full_messages.join(', ')}."
+    end
+  end
+
   private
 
     def set_location
+      #FIXME_DONE: what if location not found
       if params[:location_name].nil?
         @location = Location.where(id: params[:location_id]).take
       else
         @location = Location.where(name: params[:location_name]).take
       end
-      #FIXME_AB: what if location not found
+      if @location.nil?
+        redirect_to :back, alert: "Unable to find location in #{params}."
+      end
+    end
+
+    def set_location_order
+      @order = Order.where(id: params[:order_id]).take
+      @location = Location.where(id: params[:location_id]).take
     end
 
 end

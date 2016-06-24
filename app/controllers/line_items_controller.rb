@@ -4,7 +4,6 @@ class LineItemsController < ApplicationController
   before_action :set_order
 
   def create
-    # debugger
     @line_item = @order.line_items.new(line_item_params)
     @line_item.set_price
     if params[:extra_ingridents].present?

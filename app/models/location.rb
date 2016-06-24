@@ -55,7 +55,6 @@ class Location < ActiveRecord::Base
       if default_location
         begin
           current_default = default
-          # debugger
           if current_default
             current_default.default_location = false
             current_default.save

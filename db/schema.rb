@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160617080559) do
+ActiveRecord::Schema.define(version: 20160624060218) do
 
   create_table "extra_items", force: :cascade do |t|
     t.integer  "line_item_id",  limit: 4
@@ -114,6 +114,19 @@ ActiveRecord::Schema.define(version: 20160617080559) do
 
   add_index "recipe_items", ["ingredient_id"], name: "index_recipe_items_on_ingredient_id", using: :btree
   add_index "recipe_items", ["meal_id"], name: "index_recipe_items_on_meal_id", using: :btree
+
+  create_table "reviews", force: :cascade do |t|
+    t.string   "comment",         limit: 255
+    t.integer  "rating",          limit: 4
+    t.integer  "user_id",         limit: 4
+    t.integer  "reviewable_id",   limit: 4
+    t.string   "reviewable_type", limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "reviews", ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id", using: :btree
+  add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
 
   create_table "transactions", force: :cascade do |t|
     t.boolean  "captured",                                        default: true

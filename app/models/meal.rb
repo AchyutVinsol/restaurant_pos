@@ -32,6 +32,7 @@ class Meal < ActiveRecord::Base
   has_many :ingredients, through: :recipe_items
   accepts_nested_attributes_for :recipe_items, allow_destroy: true
   has_many :line_items
+  has_many :reviews, as: :reviewable
 
   validates_with PriceValidator
 
@@ -44,7 +45,25 @@ class Meal < ActiveRecord::Base
   end
 
   def available?(location)
-    quantity_available_by_location(location) > 0    
+    quantity_available_by_location(location) > 0
+  end
+
+  def reviewable?(user)
+    # if self in current_user.orders.delivered.meals
+    user.orders.delivered.each do |order|
+      if order.meals.any? { |meal| meal.id == id }
+        return true
+      end
+    end
+    return false
+  end
+
+  def rating
+    if reviews.size == 0
+      return 0
+    else
+      reviews.sum(:rating) / reviews.size
+    end
   end
 
   def toogle_status

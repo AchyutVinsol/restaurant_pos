@@ -62,6 +62,45 @@
         </fieldset>
       </div>
     <% end %>
+      <div class='col-md-7'>
+        <% @meal.reviews.each do |review| -%>
+          <div class="well well-lg">
+            <article>
+              <b><%= review.user.first_name + ' Says : ' %></b>
+              <%= review.comment %>
+              <br>
+              <br>
+              <b><%= 'Given rating :' + review.rating.to_s %></b>
+              <br>
+            </article>
+          </div>
+        <% end %>
+        <% if @meal.reviewable?(current_user) %>
+          <%= form_tag(location_meal_reviews_path(@location, @meal), class: 'form') do %>
+            <fieldset>
+              <div class="form-group">
+                <%= label_tag :comment, "Comment:", class: "col-md-4 control-label" %>
+                <div class="col-md-8">
+                  <%= text_area_tag :comment, 'Write a review.', class: 'form-control' %>
+                </div>
+              </div>
+              <br></br>
+              <div class="form-group">
+                <%= label_tag :rating, "Select Meal rating:", class: "col-md-4 control-label" %>
+                <div class="col-md-8">
+                  <%= select_tag :rating, options_for_select(1..5), class: 'form-control' %>
+                </div>
+              </div>
+              <br></br>
+              <div class="form-group pull-left">
+                <div class="col-md-8 col-md-offset-2">
+                  <%= submit_tag "Post Review", class: "btn btn-default btn-primary" %>
+                </div>
+              </div>
+            </fieldset>
+          <% end %>
+        <% end %>
+      </div>
     </br>
   </div>
 </div>
