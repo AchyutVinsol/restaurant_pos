@@ -34,7 +34,7 @@ class Meal < ActiveRecord::Base
   has_many :line_items
   has_many :reviews, as: :reviewable
 
-  validates_with PriceValidator
+  validates_with PriceValidator, unless: 'price.blank?'
 
   scope :active, -> { where(active: true) }
 

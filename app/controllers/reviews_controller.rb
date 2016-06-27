@@ -2,7 +2,6 @@ class ReviewsController < ApplicationController
   before_action :set_meal
 
   def create
-    # debugger
     # @review = @meal.reviews.build(review_params << user_id: current_user.id)
     @review = @meal.reviews.build(review_params)
     @review.user_id = current_user.id
@@ -14,7 +13,6 @@ class ReviewsController < ApplicationController
   end
 
   def index
-    # debugger
   end
 
   private
