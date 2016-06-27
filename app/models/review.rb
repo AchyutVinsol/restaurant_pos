@@ -25,6 +25,7 @@ class Review < ActiveRecord::Base
   validates :comment, :rating, presence: true
   validates :comment, length: { in: 1..200 }
   validates :rating, numericality: { only_integer: true, greater_than: 0, lesser_than: 6 }
-  validates :user_id, uniqueness: {scope: [:reviewable_type, :reviewable_id]}
+  #FIXME_DONE: overwrite default mesage as you have already submitted your review
+  validates :user_id, uniqueness: {scope: [:reviewable_type, :reviewable_id], message: 'You have already submitted your review.'}
 
 end

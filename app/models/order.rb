@@ -33,19 +33,15 @@ class Order < ActiveRecord::Base
   has_many :meals, through: :line_items
   has_many :transactions, dependent: :restrict_with_error
 
-  #FIXME_DONE: one validation that expired orders can not be checkout
   before_save :set_expiry_at, if: :new_order?
   before_save :set_price, if: :pending?
   after_save :block_inventories, :send_order_placed_mail, if: :being_paid?
   after_destroy :unblock_inventory
 
-  #FIXME_DONE: dont use status: 0 or one use statuses[:pending] etc
   scope :pending, -> { where(status: statuses[:pending]) }
   scope :delivered, -> { where(status: statuses[:delivered]) }
   scope :not_pending, -> { where.not(status: statuses[:pending]) }
-  # scope :expired, lambda {|order| where("start_date >=?", x) }
-  # expiry_at.present? && (expiry_at > Time.current)
-
+  scope :expired, lambda {|order| where("expiry_at < ?", Time.current) }
 
   enum status: {pending: 0, paid: 1, delivered: 2, canceled: 3}
 
@@ -55,7 +51,6 @@ class Order < ActiveRecord::Base
   validates_with OrderIngredientsQuantityValidator, if: 'being_paid?'
 
   # validates_with AvaliableMealValidator
-  #FIXME_DONE: paid? pending? delivered? canceled?
 
   def pending?
     self.status == 'pending'
@@ -82,21 +77,26 @@ class Order < ActiveRecord::Base
   end
 
   def mark_paid(charge, params)
-    return false if expired?
-    pickup_time = params[:order]
-    transactions.build(charge_params(charge))
-    self.status = 'paid'
-    self.placed_at = Time.current
-    self.pickup_time = Time.new(
-      pickup_time[:'pickup_time(1i)'].to_i,
-      pickup_time[:'pickup_time(2i)'].to_i,
-      pickup_time[:'pickup_time(3i)'].to_i,
-      pickup_time[:'pickup_time(4i)'].to_i,
-      pickup_time[:'pickup_time(5i)'].to_i,
-      0
-    )
-    self.contact_number = params[:contact_number]
-    save
+    if expired?
+      errors.add(:base, "Checkout time expired at #{expiry_at}")
+      return false 
+    end
+    begin
+      pickup_time = params[:order]
+      transactions.build(charge_params(charge))
+      self.status = 'paid'
+      self.placed_at = Time.current
+      self.pickup_time = Time.new(
+        pickup_time[:'pickup_time(1i)'].to_i,
+        pickup_time[:'pickup_time(2i)'].to_i,
+        pickup_time[:'pickup_time(3i)'].to_i,
+        pickup_time[:'pickup_time(4i)'].to_i,
+        pickup_time[:'pickup_time(5i)'].to_i,
+        0
+      )
+      self.contact_number = params[:contact_number]
+      save
+    end
   end
 
   def mark_delivered
@@ -105,14 +105,19 @@ class Order < ActiveRecord::Base
   end
 
   def mark_canceled
-    return false if !cancelable?
-    #FIXME_AB: wrap in transaction
-    self.status = 'canceled'
-    unblock_inventory
-    refund_obj = transactions.first.refund
-    charge = Stripe::Charge.retrieve(refund_obj[:charge])
-    transactions.build(charge_params(charge))
-    save
+    if !cancelable?
+      errors.add(:base, "Checkout pickup time #{pickup_time}, can not be cancled 30 minutes before pickup time.")
+      return false
+    end
+    #FIXME_DONE: wrap in transaction
+    begin
+      self.status = 'canceled'
+      unblock_inventory
+      refund_obj = transactions.first.refund
+      charge = Stripe::Charge.retrieve(refund_obj[:charge])
+      transactions.build(charge_params(charge))
+      save
+    end
   end
 
   def expired?
@@ -120,9 +125,7 @@ class Order < ActiveRecord::Base
   end
 
   def cancelable?
-    #FIXME_DONE: pickup_time > 30.minutes.from_now 
-    #FIXME_DONE: 30 should be moved to constant
-    status == 'paid' && (pickup_time < CANCELATION_BUFFER_MINUTES.minutes.from_now)
+    paid? && (pickup_time < CANCELATION_BUFFER_MINUTES.minutes.from_now)
   end
 
   private

@@ -5,16 +5,12 @@ class Admin::PosController < Admin::BaseController
   before_action :set_location_order, only: [:show, :cancel]
 
   def index
-    #FIXME_DONE: eagerloading
     @orders = @location.orders.not_pending.order(:pickup_time).includes(:user)
   end
 
   def show
     @transaction = @order.transactions.first
   end
-
-  #FIXME_DONE: I am not able to deliver any order or cancle
-  #FIXME_DONE: cancel action should be here
 
   def deliver
     @order = @location.orders.where(id: params[:order_id]).take
@@ -36,7 +32,6 @@ class Admin::PosController < Admin::BaseController
   private
 
     def set_location
-      #FIXME_DONE: what if location not found
       if params[:location_name].nil?
         @location = Location.where(id: params[:location_id]).take
       else
@@ -48,8 +43,9 @@ class Admin::PosController < Admin::BaseController
     end
 
     def set_location_order
-      @order = Order.where(id: params[:order_id]).take
       @location = Location.where(id: params[:location_id]).take
+      @order = @location.orders.where(id: params[:order_id]).take
+      # @order = Order.where(id: params[:order_id]).take
     end
 
 end

@@ -12,8 +12,6 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    #FIXME_DONE: no notice for user 
-    #FIXME_DONE: what if it is not cancled? 
     if @order.mark_canceled
       redirect_to :back, notice: "Order #{@order.id} has been cancled."
     else
@@ -22,7 +20,7 @@ class OrdersController < ApplicationController
   end
 
   def index
-    @orders = current_user.orders.where.not(status: "pending").includes(:location)
+    @orders = current_user.orders.order(placed_at: :desc).order(pickup_time: :desc).where.not(status: "pending").includes(:location)
   end
 
   def place
@@ -39,6 +37,7 @@ class OrdersController < ApplicationController
       redirect_to details_user_order_path(current_user, @order), notice: 'Your order has been successfully placed!'
     else
       @order.transactions.first.refund
+      debugger
       redirect_to :back, alert: "The order could not be placed because of the following errors. \n #{@order.errors.full_messages.join(', ')}"
     end
 

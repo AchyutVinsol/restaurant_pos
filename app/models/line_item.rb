@@ -43,18 +43,27 @@ class LineItem < ActiveRecord::Base
     current_location == order.location
   end
 
-  #FIXME_LATER: block_inventories and unblock_inventories are very similar!, use yield?
   def block_inventories(inventory_items)
     meal.recipe_items.each do |ri|
-      quantity = ingredient_quantity_in_meal(ri)
-      inventory_items.where(ingredient_id: ri.ingredient_id).take.decrease_quantity(quantity * self.quantity)
+      begin
+        quantity = ingredient_quantity_in_meal(ri)
+        inventory_items.where(ingredient_id: ri.ingredient_id).take.decrease_quantity(quantity * self.quantity)
+      rescue Exception => e
+        errors.add(:base, "Can not block quantity for #{ri.ingredient.name}")
+        raise e
+      end
     end
   end
 
   def unblock_inventories(inventory_items)
     meal.recipe_items.each do |ri|
-      quantity = ingredient_quantity_in_meal(ri)
-      inventory_items.where(ingredient_id: ri.ingredient_id).take.increase_quantity(quantity * self.quantity)
+      begin
+        quantity = ingredient_quantity_in_meal(ri)
+        inventory_items.where(ingredient_id: ri.ingredient_id).take.increase_quantity(quantity * self.quantity)
+      rescue Exception => e
+        errors.add(:base, "Can not unblock quantity for #{ri.ingredient.name}")
+        raise e
+      end
     end
   end
 

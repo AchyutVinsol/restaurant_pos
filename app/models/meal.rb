@@ -49,7 +49,7 @@ class Meal < ActiveRecord::Base
   end
 
   def reviewable?(user)
-    # if self in current_user.orders.delivered.meals
+    #FIXME_DONE: I should see other people's reviews
     user.orders.delivered.each do |order|
       if order.meals.any? { |meal| meal.id == id }
         return true
