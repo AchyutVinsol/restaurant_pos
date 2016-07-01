@@ -4,8 +4,15 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+sample_location:
+  name: 'loc1'
+  city: 'city'
+  state: 'state'
+  street_first: 'street1'
+  street_second: 'street2'
+  default_location: 1
+  opening_time: <%= 4.hours.ago %>
+  closing_time: <%= 4.hours.from_now %>
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>

@@ -4,8 +4,39 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+delivered_order:
+  user: sample_user
+  location: sample_location
+  expiry_at: <%= 1.hour.from_now %>
+  placed_at: <%= Time.current.to_s(:db) %>
+  pickup_time: <%= 2.hour.from_now %>
+  status: 2
+  contact_number: 9876678545
+  price: 1000
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
+
+pending_order:
+  user: sample_user
+  location: sample_location
+  expiry_at: <%= 1.hour.from_now %>
+  placed_at: <%= Time.current.to_s(:db) %>
+  pickup_time: <%= 2.hour.from_now %>
+  status: 1
+  contact_number: 9876678545
+  price: 1000
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
+
+paid_order:
+  user: sample_user
+  location: sample_location
+  expiry_at: <%= 1.hour.from_now %>
+  placed_at: <%= Time.current.to_s(:db) %>
+  pickup_time: <%= 2.hour.from_now %>
+  status: 0
+  contact_number: 9876678545
+  price: 1000
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>

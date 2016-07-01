@@ -94,31 +94,59 @@ class MealTest < ActiveSupport::TestCase
   test "check function activate" do
     meal = meals(:valid_meal)
     meal.activate
-    assert_equal(meal.active, true, "activate function fail")
+    assert_equal(true, meal.active, "activate function fail")
+  end
+
+  test "check function toogle_status" do
+    meal = meals(:valid_meal)
+    status = meals(:valid_meal).active
+    meal.toogle_status
+    assert_equal(meal.active, !status, "toogle_status function fail")
+  end
+
+  test "check function toogle_status alternate" do
+    meal = meals(:valid_meal)
+    status = meals(:valid_meal).active
+    meal.toogle_status
+    meal.toogle_status
+    assert_equal(meal.active, status, "toogle_status function fail")
   end
 
   test "check function deactivate" do
     meal = meals(:valid_meal)
     meal.deactivate
-    assert_equal(meal.active, false, "activate function fail")
+    assert_equal(false, meal.active, "activate function fail")
   end
 
   test "check function veg?" do
     meal = meals(:valid_meal)
-    assert_equal(meal.veg?, true, "activate function fail")
+    assert_equal(false, meal.veg?, "activate function fail")
   end
 
   test "check function minimum_price" do
     meal = meals(:valid_meal)
     meal.minimum_price
-    assert_equal(meal.minimum_price, true, "incorrect association options")
+    assert_equal(meal.minimum_price, 9.5, "minimum_price function fail")
   end
 
   test "check function quantity_available_by_location" do
     meal = meals(:valid_meal)
-    association = meal.association(:reviews)
-    options = { as: :reviewable }
-    assert_equal(association.options, options, "incorrect association options")
+    assert_equal(33, meal.quantity_available_by_location(locations(:sample_location)), "quantity_available_by_location function fail")
+  end
+
+  test "check function available?" do
+    meal = meals(:valid_meal)
+    assert_equal(true, meal.available?(locations(:sample_location)), "available? function fail")
+  end
+
+  test "check function reviewable?" do
+    assert_equal(true, meals(:valid_meal).reviewable?(users(:sample_user)), "reviewable? function fail")
+    assert_equal(false, meals(:valid_meal2).reviewable?(users(:sample_user)), "reviewable? function fail")
+  end
+
+  test "check function rating" do
+    assert_equal(3, meals(:valid_meal).rating, "rating function fail")
+    assert_equal(0, meals(:valid_meal2).rating, "rating function fail")
   end
 
 end

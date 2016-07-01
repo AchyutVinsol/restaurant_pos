@@ -4,8 +4,12 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+sample_review1:
+  comment: 'So this is a example.'
+  rating: 3
+  user: sample_user
+  reviewable: valid_meal
+  reviewable_type: meal
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>

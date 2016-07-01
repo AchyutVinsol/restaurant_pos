@@ -7,7 +7,7 @@
 
 valid_meal:
   name: 'Sample_1'
-  price: '100.00'
+  price: 13.00
   active: 1
   image_file_name: 'abc.jpg'
   image_content_type: 'image/jpeg'
@@ -18,7 +18,18 @@ valid_meal:
 
 valid_meal1:
   name: 'Sample_2'
-  price: '100.00'
+  price: 11.00
+  active: 1
+  image_file_name: 'abc.jpg'
+  image_content_type: 'image/jpeg'
+  image_file_size: 7023
+  image_updated_at: <%= Time.current.to_s(:db) %>
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
+
+valid_meal2:
+  name: 'Sample_2'
+  price: 11.00
   active: 1
   image_file_name: 'abc.jpg'
   image_content_type: 'image/jpeg'
