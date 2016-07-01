@@ -4,8 +4,28 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+ingredient_1:
+  name: 'ing_1'
+  price: 1.1
+  veg: 1
+  can_request_extra: 1
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
+
+ingredient_2:
+  name: 'ing_2'
+  price: 1.2
+  veg: 1
+  can_request_extra: 0
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
+
+ingredient_3:
+  name: 'ing_3'
+  price: 2.0
+  veg: 0
+  can_request_extra: 0
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
+

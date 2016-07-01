@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Admin::InventoriesControllerTest < ActionController::TestCase
+class Admin::InventoryItemsControllerTest < ActionController::TestCase
   # test "the truth" do
   #   assert true
   # end

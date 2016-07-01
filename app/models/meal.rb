@@ -28,13 +28,14 @@ class Meal < ActiveRecord::Base
   validates_attachment_file_name :image, :matches => [/png\Z/, /jpe?g\Z/, /gif\Z/]
   validates_attachment :image, presence: true, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }#, size: { in: 0..10.kilobytes }
 
+  validates_with PriceValidator, unless: 'price.blank?'
+
   has_many :recipe_items, dependent: :destroy
   has_many :ingredients, through: :recipe_items
   accepts_nested_attributes_for :recipe_items, allow_destroy: true
   has_many :line_items
   has_many :reviews, as: :reviewable
 
-  validates_with PriceValidator, unless: 'price.blank?'
 
   scope :active, -> { where(active: true) }
 

@@ -4,8 +4,25 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+valid_meal:
+  name: 'Sample_1'
+  price: '100.00'
+  active: 1
+  image_file_name: 'abc.jpg'
+  image_content_type: 'image/jpeg'
+  image_file_size: 7023
+  image_updated_at: <%= Time.current.to_s(:db) %>
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
+
+valid_meal1:
+  name: 'Sample_2'
+  price: '100.00'
+  active: 1
+  image_file_name: 'abc.jpg'
+  image_content_type: 'image/jpeg'
+  image_file_size: 7023
+  image_updated_at: <%= Time.current.to_s(:db) %>
+  created_at: <%= Time.current.to_s(:db) %>
+  updated_at: <%= Time.current.to_s(:db) %>
