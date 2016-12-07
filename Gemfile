@@ -32,7 +32,8 @@ gem "paperclip", "~> 5.1.0"
 # gem "paperclip", "~> 5.0.0.beta1"
 gem "nested_form"
 gem 'stripe'
-
+# gem 'simplecov', '~> 0.11.2'
+gem 'simplecov', :require => false, :group => :test
 # Use Unicorn as the app server
 # gem 'unicorn'
 
