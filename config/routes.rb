@@ -32,7 +32,7 @@ Rails.application.routes.draw do
       resources :line_items, only: [:create, :delete, :show, :index]
     end
   end
-  
+
 
 
 

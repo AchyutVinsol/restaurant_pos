@@ -129,6 +129,7 @@ class User < ActiveRecord::Base
 
     def genrate_email_verification_token
       self.verification_token = generate_token('verification_token')
+      debugger
       self.verification_token_expiry_at = CONSTANTS['token_validity_period'].hours.from_now
     end
 

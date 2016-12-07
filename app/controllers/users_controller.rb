@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to home_path, notice: "Hi #{ @user.first_name }, your account was successfully created, a verifiction email has been sent to #{ @user.email }" 
     else
-       render :new 
+      render :new
     end
   end
 
