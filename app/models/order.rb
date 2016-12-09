@@ -8,7 +8,7 @@
 #  expiry_at      :datetime
 #  placed_at      :datetime
 #  pickup_time    :datetime
-#  status         :integer          default(0)
+#  status         :integer          default("pending")
 #  contact_number :string(255)      default("99999")
 #  price          :decimal(8, 2)
 #  created_at     :datetime         not null
