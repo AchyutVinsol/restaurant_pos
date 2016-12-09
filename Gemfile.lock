@@ -214,7 +214,7 @@ DEPENDENCIES
   nested_form
   paperclip (~> 5.1.0)
   rails (~> 5.0.0, >= 5.0.0.1)
-  sass-rails (~> 5.0)
+  sass-rails (~> 5.0.3)
   sdoc (~> 0.4.0)
   simplecov
   spring

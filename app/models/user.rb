@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
 
   def fullfill_forgot_password_token!
     self.forgot_password_token = generate_token(:forgot_password_token)
-    self.forgot_password_token_expiry_at = CONSTANTS['token_validity_period'].hours.from_now
+    self.forgot_password_token_expiry_at = ENV.fetch('TOKEN_VALIDITY_PERIOD').hours.from_now
     save!
     UserNotifier.forgot_password_email(self).deliver_now
   end
@@ -131,7 +131,7 @@ class User < ActiveRecord::Base
     def genrate_email_verification_token
       self.verification_token = generate_token('verification_token')
       debugger
-      self.verification_token_expiry_at = CONSTANTS['token_validity_period'].hours.from_now
+      self.verification_token_expiry_at = ENV.fetch('TOKEN_VALIDITY_PERIOD').hours.from_now
     end
 
     def generate_token(token_type)
