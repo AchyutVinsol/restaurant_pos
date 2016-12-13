@@ -1,6 +1,6 @@
 class UserNotifier < ApplicationMailer
   layout 'mailer'
-  default from: ENV.fetch('EMAIL_ID')
+  default from: CONSTANTS[:default_email_id]
 
   def verification_email(user)
     @user = user
