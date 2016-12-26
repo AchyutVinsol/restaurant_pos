@@ -6,7 +6,7 @@
       <h3>No meal has been sold at location!</h3>
     <% else %>
       <h3><%= "Meal: #{ @meal.name }" %></h3>
-      <%= image_tag @meal.image.url(:medium) %>
+      <%= image_tag @meal.source(:medium) %>
       <% if @meal.veg? %>
         <h4><span class="label label-success">Vegetarian</span></h4>
       <% else %>
@@ -40,7 +40,7 @@
       <h3>
         <%= "Meal: #{ @meal_day.name }" %>
       </h3>
-      <%= image_tag @meal_day.image.url(:medium) %>
+      <%= image_tag @meal_day.source(:medium) %>
       <% if @meal_day.veg? %>
         <h4><span class="label label-success">Vegetarian</span></h4>
       <% else %>

@@ -2,7 +2,7 @@
 <tr>
   <td><%= meal.name %></td>
   <td><%= meal.price %></td>
-  <td><%= image_tag meal.image.url(:thumb) %></td>
+  <td><%= image_tag meal.source(:thumb) %></td>
   <td>
     <% if meal.active %>
       <%= @status = 'Selling' %>

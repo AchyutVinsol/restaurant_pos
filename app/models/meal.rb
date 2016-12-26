@@ -93,4 +93,9 @@ class Meal < ActiveRecord::Base
     recipe_items.inject(0){ |sum, recipe| sum + (recipe.quantity * recipe.ingredient.price) }.to_f
   end
 
+  def source(type)
+    source_string = self.image.url(type)
+    source_string.slice!('achyut-blog-assets/')
+    source_string
+  end
 end

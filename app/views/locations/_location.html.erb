@@ -24,7 +24,7 @@
     <% @meals.each do |meal| %>
       <div class="col-sm-4 col-lg-4 col-md-4">
         <div class="thumbnail">
-          <%= image_tag meal.image.url(:medium) %>
+          <%= image_tag meal.source(:medium) %>
           <div class="caption">
             <h4 class="pull-right"><%= number_to_currency(meal.price) %></h4>
             <h4><%= meal.name %></h4>
